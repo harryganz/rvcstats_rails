@@ -11,9 +11,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20141215191043) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "animals", force: true do |t|
+    t.string   "species_name"
+    t.string   "common_name"
+    t.string   "species_cd"
+    t.integer  "species_nr"
+    t.integer  "gen_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "animals", ["gen_id"], name: "index_animals_on_gen_id", using: :btree
+
+  create_table "gens", force: true do |t|
+    t.string   "genus_name"
+    t.string   "common_name"
+    t.integer  "family_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gens", ["family_id"], name: "index_gens_on_family_id", using: :btree
 
 end
