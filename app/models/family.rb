@@ -3,8 +3,8 @@ class Family < ActiveRecord::Base
 	has_many :genera, :class_name => 'Gen'
 
 	#Validations
-	CAP_REGEX = /^[A-Z][a-z]+$/ 
-	COM_REGEX = /^[A-Za-z\s]+$/ #Letters and spaces
+	CAP_REGEX = /\A[A-Z][a-z]+\Z/ 
+	COM_REGEX = /\A[A-Za-z\s]+\Z/ #Letters and spaces
 
 	validates :family_name, :presence => true, 
 	  :uniqueness => true, 
@@ -12,7 +12,8 @@ class Family < ActiveRecord::Base
 	  :message => 'must start with capital letter'} 
 
 	validates :common_name,
-	  format => {:with => COM_REGEX,
+		:allow_blank => true,
+	    :format => {:with => COM_REGEX,
 	  	:message => 'must contain only letters and 
 	  	spaces'}
 
