@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 20141215194915) do
   create_table "families", force: true do |t|
     t.string   "family_name"
     t.string   "common_name"
-    t.string   "family_nr"
+    t.integer  "family_nr"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
