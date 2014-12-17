@@ -8,6 +8,7 @@ class Gen < ActiveRecord::Base
 	COM_REGEX = /\A[A-Za-z\s]+\Z/ #Letters and spaces
 
 	validates :genus_name, :presence => true,
+	  :uniqueness => true,
  	  :format => {:with => CAP_REGEX,
  	  :message => 'must start with capital letter'}
 
