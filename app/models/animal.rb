@@ -3,7 +3,7 @@ class Animal < ActiveRecord::Base
 	belongs_to :genus, :class_name => 'Gen', :foreign_key => 'gen_id'
 	
 	#Validations
-	SPC_REGEX = /\A[a-z]+\Z/ #Only lowercase letters
+	SPC_REGEX = /\A[a-z.]+\Z/ #Only lowercase letters and periods
 	COM_REGEX = /\A[A-Za-z\s]+\Z/ #Letters and spaces
 	CD_REGEX = /\A[A-Z]{3}\s{1}(?:[A-Z]{4}|[A-Z]{3}[.]{1})\Z/
 	# 3 Caps + space + (4 Caps Or 3 Caps and a period)
