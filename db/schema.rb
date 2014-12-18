@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141215194915) do
+ActiveRecord::Schema.define(version: 20141217201900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,5 +45,34 @@ ActiveRecord::Schema.define(version: 20141215194915) do
   end
 
   add_index "gens", ["family_id"], name: "index_gens_on_family_id", using: :btree
+
+  create_table "regions", force: true do |t|
+    t.string   "region_cd"
+    t.string   "region_name"
+    t.integer  "region_nr"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "strats", force: true do |t|
+    t.string   "strat_cd"
+    t.text     "strat_description"
+    t.boolean  "protected"
+    t.integer  "ntot"
+    t.integer  "grid_size"
+    t.integer  "year_id"
+    t.integer  "region_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "strats", ["region_id"], name: "index_strats_on_region_id", using: :btree
+  add_index "strats", ["year_id"], name: "index_strats_on_year_id", using: :btree
+
+  create_table "years", force: true do |t|
+    t.integer  "year"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end
