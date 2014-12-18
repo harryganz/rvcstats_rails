@@ -20,11 +20,11 @@ class Record < ActiveRecord::Base
 	  :presence => true,
 	  :numericality => {
 	  	:only_integer => true
-	  }
+	  },
 	  :inclusion => {:in => [1,2,3]}
 
 	validates :animal_id,
-	  :presence => true
+	  :presence => true,
 	  :numericality => {
 	  	:only_integer => true
 	  }

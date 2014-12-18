@@ -44,6 +44,13 @@ class Psu < ActiveRecord::Base
 	  	:only_integer => true
 	  }
 
+	validates :mpa_nr,
+	  :presence => true,
+	  :numericality => {
+	  	:only_integer => true,
+	  	:greater_than_or_equal_to => 0
+	  }
+
 	validates :strat_id, 
 	  :presence => true,
 	  :numericality => {
