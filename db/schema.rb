@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141217201900) do
+ActiveRecord::Schema.define(version: 20141218174041) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,34 @@ ActiveRecord::Schema.define(version: 20141217201900) do
 
   add_index "gens", ["family_id"], name: "index_gens_on_family_id", using: :btree
 
+  create_table "psus", force: true do |t|
+    t.string   "psu_cd"
+    t.integer  "month"
+    t.integer  "day"
+    t.integer  "zone_nr"
+    t.integer  "subregion_nr"
+    t.integer  "mapgrid_nr"
+    t.integer  "mpa_nr"
+    t.integer  "strat_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "psus", ["strat_id"], name: "index_psus_on_strat_id", using: :btree
+
+  create_table "records", force: true do |t|
+    t.float    "num"
+    t.float    "len"
+    t.integer  "time_seen"
+    t.integer  "animal_id"
+    t.integer  "station_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "records", ["animal_id"], name: "index_records_on_animal_id", using: :btree
+  add_index "records", ["station_id"], name: "index_records_on_station_id", using: :btree
+
   create_table "regions", force: true do |t|
     t.string   "region_cd"
     t.string   "region_name"
@@ -53,6 +81,21 @@ ActiveRecord::Schema.define(version: 20141217201900) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "stations", force: true do |t|
+    t.integer  "station_nr"
+    t.float    "lat_degrees"
+    t.float    "lon_degrees"
+    t.float    "depth"
+    t.float    "underwater_visibility"
+    t.string   "habitat_cd"
+    t.float    "radius",                null: false
+    t.integer  "psu_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "stations", ["psu_id"], name: "index_stations_on_psu_id", using: :btree
 
   create_table "strats", force: true do |t|
     t.string   "strat_cd"
