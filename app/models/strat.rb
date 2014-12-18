@@ -2,7 +2,7 @@ class Strat < ActiveRecord::Base
 	#Relationships
 	belongs_to :region
 	belongs_to :year
-	# has_many :psus
+	has_many :psus
 
 	#Validations
 	#TODO: Add validations for code based on
