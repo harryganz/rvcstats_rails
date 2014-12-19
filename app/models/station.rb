@@ -13,6 +13,11 @@ class Station < ActiveRecord::Base
 	  	:only_integer => true,
 	  	:greater_than => 0,
 	  	:less_than => 11
+	  },
+	  :uniqueness => {
+	  	:scope => :psu,
+	  	:message => 'must be unique within each 
+	  	primary sampling unit'
 	  }
 
 	validates :lat_degrees,
