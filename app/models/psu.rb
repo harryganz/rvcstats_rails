@@ -1,12 +1,18 @@
 class Psu < ActiveRecord::Base
 	#Relationships
-	belongs_to :strat
+	belongs_to :stratum, :class_name => :strat,
+	 :foreign_key => 'strat_id'
 	has_many :stations
 
 	#Validations
 	validates :psu_cd, 
 	  :presence => true,
-	  :uniqueness => true
+	  :uniqueness => {
+	  	:scope => :stratum,
+	  	:message => 'must be 
+	  	unique within each stratum'
+	  }
+	  #TODO: Make unique within year, region instead
 
 	validates :month,
 	  :presence => true,
