@@ -8,7 +8,10 @@ class Strat < ActiveRecord::Base
 	#TODO: Add validations for code based on
 	# region
 	validates :strat_cd,
-	  :presence => true
+	  :presence => true,
+	  :uniqueness => {
+	  	:scope => [:year, :region]
+	  }
 
 	validates :protected,
 	  :inclusion => {
