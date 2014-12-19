@@ -11,7 +11,7 @@ class Animal < ActiveRecord::Base
 	validates :species_name, :presence => true,
 	  :format => {:with => SPC_REGEX,
 	  :message => 'must contain only lowercase letters'},
-	  :uniqueness => {:scope => :gen_id,
+	  :uniqueness => {:scope => :genus,
 	  :message => 'must be unique within each genus'}
 
 	validates :common_name, 
