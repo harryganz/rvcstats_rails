@@ -1,6 +1,7 @@
 class Region < ActiveRecord::Base
 	#Relationships 
 	has_many :strata, :class_name => 'Strat'
+	has_many :psus
 
 	#Validations
 	NAME_REGEX = /\A[A-Za-z\s]+\Z/

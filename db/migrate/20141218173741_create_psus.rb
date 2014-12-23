@@ -9,6 +9,8 @@ class CreatePsus < ActiveRecord::Migration
       t.integer :mapgrid_nr
       t.integer :mpa_nr
       t.integer :strat_id
+      t.integer :region_id
+      t.integer :year_id
       t.timestamps
     end
     add_index :psus, :strat_id

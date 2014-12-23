@@ -55,6 +55,8 @@ ActiveRecord::Schema.define(version: 20141218174041) do
     t.integer  "mapgrid_nr"
     t.integer  "mpa_nr"
     t.integer  "strat_id"
+    t.integer  "region_id"
+    t.integer  "year_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
