@@ -1,6 +1,6 @@
 class Psu < ActiveRecord::Base
 	#Relationships
-	belongs_to :stratum, :class_name => :strat,
+	belongs_to :stratum, :class_name => 'Strat',
 	 :foreign_key => 'strat_id'
 	has_many :stations
 
