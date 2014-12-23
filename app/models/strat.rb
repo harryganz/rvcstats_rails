@@ -10,7 +10,7 @@ class Strat < ActiveRecord::Base
 	validates :strat_cd,
 	  :presence => true,
 	  :uniqueness => {
-	  	:scope => [:year, :region]
+	  	:scope => [:year, :region, :protected]
 	  }
 
 	validates :protected,
