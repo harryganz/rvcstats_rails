@@ -14,8 +14,8 @@ end
 def index
   plural_resource_name = "@#{resource_name.pluralize}"
   resources = resource_class.where(query_params)
-  .page(page_params[:page])
-  .per(page_params[:page_size])
+  #.page(page_params[:page])
+  #.per(page_params[:page_size])
 
   instance_variable_set(plural_resource_name, resources)
   respond_with instance_variable_get(plural_resource_name)
@@ -53,9 +53,9 @@ end
 
 # Returns the allowed parameters for pagination
 # @return [Hash]
-def page_params
-  params.permit(:page, :page_size)
-end
+# def page_params
+#   params.permit(:page, :page_size)
+# end
 
 # The resource class based on the controller
 # @return [Class]
