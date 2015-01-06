@@ -53,15 +53,15 @@ module Api
         instance_variable_set("@#{resource_name}", resource)
       end
       # POST /api/{plural_resource_name}
-def create
-  set_resource(resource_class.new(resource_params))
+      def create
+        set_resource(resource_class.new(resource_params))
 
-  if get_resource.save
-    render :show, status: :created
-  else
-    render json: get_resource.errors, status: :unprocessable_entity
-  end
-end
+        if get_resource.save
+          render :show, status: :created
+        else
+          render json: get_resource.errors, status: :unprocessable_entity
+        end
+      end
 
 # DELETE /api/{plural_resource_name}/1
 def destroy
@@ -73,8 +73,8 @@ end
 def index
   plural_resource_name = "@#{resource_name.pluralize}"
   resources = resource_class.where(query_params)
-                            .page(page_params[:page])
-                            .per(page_params[:page_size])
+  .page(page_params[:page])
+  .per(page_params[:page_size])
 
   instance_variable_set(plural_resource_name, resources)
   respond_with instance_variable_get(plural_resource_name)
@@ -94,5 +94,5 @@ def update
   end
 end
 
-  end
+end
 end
