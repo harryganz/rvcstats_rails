@@ -22,10 +22,4 @@ class Family < ActiveRecord::Base
 	  :uniqueness => true
 
 	# Scopes and Methods
-	def species 
-		genera = self.genera
-		species = []
-		genera.each {|g| species << g.species}
-		return species.flatten
-	end
 end
