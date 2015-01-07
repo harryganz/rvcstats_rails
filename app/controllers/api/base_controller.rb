@@ -4,6 +4,17 @@ module Api
 		before_action :set_resource, :only => [:destroy, :show, :update]
 		respond_to :json
 
+# POST /api/{plural_resource_name}
+def create
+  set_resource(resource_class.new(resource_params))
+
+  if get_resource.save
+    render :show, status: :created
+  else
+    render json: get_resource.errors, status: :unprocessable_entity
+  end
+end
+
 # DELETE /api/{plural_resource_name}/1
 def destroy
   get_resource.destroy
@@ -82,16 +93,6 @@ end
 def set_resource(resource = nil)
   resource ||= resource_class.find(params[:id])
   instance_variable_set("@#{resource_name}", resource)
-end
-# POST /api/{plural_resource_name}
-def create
-  set_resource(resource_class.new(resource_params))
-
-  if get_resource.save
-    render :show, status: :created
-  else
-    render json: get_resource.errors, status: :unprocessable_entity
-  end
 end
 
 end
