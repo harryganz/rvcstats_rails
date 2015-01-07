@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   # API Routing
   namespace :api do
-    resources :animals, :gens, :families, :strats
+    resources :animals, :gens, :families, :strats,
+      :psus
   end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
