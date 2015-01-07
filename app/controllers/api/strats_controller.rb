@@ -13,7 +13,7 @@ module Api
 		# Permitted query params for strat model
 		def query_params
 			# All params are queriable for strat
-			params.permit(:strat_cd, :strat_description,
+			params.permit(:id, :strat_cd, :strat_description,
 				:protected, :ntot, :grid_size, :year_id, :region_id)
 		end
 	end 
