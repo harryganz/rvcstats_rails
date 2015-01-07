@@ -21,5 +21,11 @@ class Family < ActiveRecord::Base
 	  :numericality => {:only_integer => true},
 	  :uniqueness => true
 
-
+	# Scopes and Methods
+	def species 
+		genera = self.genera
+		species = []
+		genera.each {|g| species << g.species}
+		return species.flatten
+	end
 end
