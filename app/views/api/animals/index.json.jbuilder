@@ -1,4 +1,4 @@
-json.animals @animals do |animal|
+json.array! @animals do |animal|
 	json.id animal.id
 	json.species_cd animal.species_cd
 	json.genus animal.genus.genus_name
