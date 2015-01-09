@@ -1,6 +1,6 @@
 class Animal < ActiveRecord::Base
 	#Relationships
-	belongs_to :genus, :class_name => 'Gen', :foreign_key => 'gen_id'
+	has_many :samples
 	
 	#Validations
 	SPC_REGEX = /\A[a-z.]+\Z/ #Only lowercase letters and periods
@@ -11,8 +11,18 @@ class Animal < ActiveRecord::Base
 	validates :species_name, :presence => true,
 	  :format => {:with => SPC_REGEX,
 	  :message => 'must contain only lowercase letters'},
-	  :uniqueness => {:scope => :genus,
+	  :uniqueness => {:scope => :genus_name,
 	  :message => 'must be unique within each genus'}
+
+	validates :genus_name, :presence => true,
+	  :uniqueness => {:scope => :family_name,
+	  	:message => 'must be unique within each family'},
+ 	  :format => {:with => CAP_REGEX,
+ 	  :message => 'must start with capital letter'}
+
+ 	validates :family_name, :presence => true,  
+	  :format => {:with => CAP_REGEX, 
+	  :message => 'must start with capital letter'} 
 
 	validates :common_name, 
 	  :allow_blank => true,
@@ -25,11 +35,7 @@ class Animal < ActiveRecord::Base
 	  of the genus and first 3 of the species'},
 	  :uniqueness => true
 
-	validates :species_nr, :presence => true,
-	  :numericality => {:only_integer => true},
-	  :uniqueness => true
-
-	validates :gen_id, :presence => true,
-	  :numericality => {:only_integer => true}
-
+	#Scopes
+	scope :sci_name, -> sciname {where(:genus_name => sciname.split(' ')[0], :species_name => sciname.split(' ')[1])} 
+		#TODO check that this doesn't break when sciname is nil
 end
