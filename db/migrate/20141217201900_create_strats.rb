@@ -9,5 +9,6 @@ class CreateStrats < ActiveRecord::Migration
       t.integer :grid_size
       t.timestamps
     end
+    add_index :strats, [:year, :region, :strat, :prot], :unique => true #composite index for rapid searhcing of unique strata
   end
 end
