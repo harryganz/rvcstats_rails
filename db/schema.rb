@@ -11,113 +11,58 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141218174041) do
+ActiveRecord::Schema.define(version: 20150109153008) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "animals", force: true do |t|
-    t.string   "species_name"
-    t.string   "common_name"
     t.string   "species_cd"
-    t.integer  "species_nr"
-    t.integer  "gen_id"
+    t.string   "sciname"
+    t.string   "comname"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "animals", ["gen_id"], name: "index_animals_on_gen_id", using: :btree
+  add_index "animals", ["species_cd"], name: "index_animals_on_species_cd", unique: true, using: :btree
 
-  create_table "families", force: true do |t|
-    t.string   "family_name"
-    t.string   "common_name"
-    t.integer  "family_nr"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "gens", force: true do |t|
-    t.string   "genus_name"
-    t.string   "common_name"
-    t.integer  "family_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "gens", ["family_id"], name: "index_gens_on_family_id", using: :btree
-
-  create_table "psus", force: true do |t|
-    t.string   "psu_cd"
+  create_table "samples", force: true do |t|
     t.integer  "month"
     t.integer  "day"
+    t.string   "primary_sample_unit"
     t.integer  "zone_nr"
     t.integer  "subregion_nr"
     t.integer  "mapgrid_nr"
     t.integer  "mpa_nr"
-    t.integer  "strat_id"
-    t.integer  "region_id"
-    t.integer  "year_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "psus", ["strat_id"], name: "index_psus_on_strat_id", using: :btree
-
-  create_table "records", force: true do |t|
-    t.float    "num"
-    t.float    "len"
     t.integer  "time_seen"
-    t.integer  "animal_id"
-    t.integer  "station_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "records", ["animal_id"], name: "index_records_on_animal_id", using: :btree
-  add_index "records", ["station_id"], name: "index_records_on_station_id", using: :btree
-
-  create_table "regions", force: true do |t|
-    t.string   "region_cd"
-    t.string   "region_name"
-    t.integer  "region_nr"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "stations", force: true do |t|
     t.integer  "station_nr"
     t.float    "lat_degrees"
     t.float    "lon_degrees"
     t.float    "depth"
     t.float    "underwater_visibility"
     t.string   "habitat_cd"
-    t.float    "radius",                null: false
-    t.integer  "psu_id"
+    t.float    "num"
+    t.float    "len"
+    t.integer  "animal_id"
+    t.integer  "strat_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "stations", ["psu_id"], name: "index_stations_on_psu_id", using: :btree
+  add_index "samples", ["animal_id"], name: "index_samples_on_animal_id", using: :btree
+  add_index "samples", ["strat_id"], name: "index_samples_on_strat_id", using: :btree
 
   create_table "strats", force: true do |t|
-    t.string   "strat_cd"
-    t.text     "strat_description"
-    t.boolean  "protected"
+    t.integer  "year"
+    t.string   "region"
+    t.string   "strat"
+    t.integer  "prot"
     t.integer  "ntot"
     t.integer  "grid_size"
-    t.integer  "year_id"
-    t.integer  "region_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "strats", ["region_id"], name: "index_strats_on_region_id", using: :btree
-  add_index "strats", ["year_id"], name: "index_strats_on_year_id", using: :btree
-
-  create_table "years", force: true do |t|
-    t.integer  "year"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
+  add_index "strats", ["year", "region", "strat", "prot"], name: "index_strats_on_year_and_region_and_strat_and_prot", unique: true, using: :btree
 
 end
