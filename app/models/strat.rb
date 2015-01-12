@@ -6,16 +6,21 @@ class Strat < ActiveRecord::Base
 	CD_REGEX = /\A[A-Z]{3}\s{1}(?:[A-Z]{4}|[A-Z]{3}[.]{1})\Z/
 	NAME_REGEX = /\A[A-Za-z\s]+\Z/
 
-	validates :year, :presence => true,
-	  :numericality => {
-	  	:only_integer => true,
-	  	:greater_than => 1986, 
-	  	:less_than => 9999}
+	validates :year, 
+	:presence => true, 
+	:numericality => {
+		:greater_than => 1986,
+		:less_than_or_equal_to => Time.now.year,
+		:message => 'must be between 1987 and the current year'
+	}
+
 
 	validates :strat,
 	  :presence => true,
 	  :uniqueness => {
-	  	:scope => [:year, :region, :prot]
+	  	:scope => [:year, :region, :prot],
+	  	:message => 'must be unique for each comnination of
+	  	year, region, and protected status'
 	  }
 
 	validates :region, 

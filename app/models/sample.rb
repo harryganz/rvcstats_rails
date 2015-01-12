@@ -1,18 +1,10 @@
 class Sample < ActiveRecord::Base
 	#Relationships 
-	belongs_to :stratum, :class => 'Strat', :foreign_key => 'strat_id' 
-	belongs_to :species, :class => 'Animal', :foreign_key => 'animal_id'
+	belongs_to :stratum, :class_name => 'Strat', :foreign_key => 'strat_id' 
+	belongs_to :species, :class_name => 'Animal', :foreign_key => 'animal_id'
 
 	#Validations
 	CD_REGEX = /\A[A-Z]{3}\s{1}(?:[A-Z]{4}|[A-Z]{3}[.]{1})\Z/
-
-	validates :year, 
-		:presence => true, 
-		:numericality => {
-			:greater_than => 1986
-			:less_than_or_equal_to => Time.now.year
-			:message => 'must be between 1987 and the current year'
-		}
 
 	validates :month,
 	  :presence => true,
@@ -30,29 +22,8 @@ class Sample < ActiveRecord::Base
 	  	:less_than => 32
 	  }
 
-	validates :region, 
-	  :presence => true,
-	  :format => {
-	  	:with => CD_REGEX,
-	  	:message => 'must consist of 
-	  	3 capital letters, a space, and 
-	  	4 capital letters'
-	  }
-	  # TODO Inclusion Validators
-
-	validates :strat,
-	  :presence => true
-	  }
-	  # TODO Format and inclusion validations
-	  # Possibly conditional inclusion based on region
-
 	validates :primary_sample_unit, 
-	  :presence => true,
-	  :uniqueness => {
-	  	:scope => [:year, :region],
-	  	:message => 'must be 
-	  	unique within each year/region'
-	  }
+	  :presence => true
 
 	validates :zone_nr,
 	  :allow_blank => true,
@@ -94,11 +65,6 @@ class Sample < ActiveRecord::Base
 	  	:only_integer => true,
 	  	:greater_than => 0,
 	  	:less_than => 11
-	  },
-	  :uniqueness => {
-	  	:scope => :primary_sample_unit,
-	  	:message => 'must be unique within each 
-	  	primary sampling unit'
 	  }
 
 	validates :lat_degrees,
@@ -133,18 +99,6 @@ class Sample < ActiveRecord::Base
 	  # TODO inclusion validators
 	  # Possibly conditional based on region
 
-	validates :species_cd,
-		:presence => true,
-		:format => {
-			:with => CD_REGEX,
-			:message => 'must consist of 
-	  	3 capital letters, a space, and 
-	  	4 capital letters'
-		}
-
-		# TODO Validator to make sure it matches available
-		# species
-
 	validates :num,
 	  :presence => true,
 	  :numericality => {
@@ -153,9 +107,7 @@ class Sample < ActiveRecord::Base
 
 	validates :len,
 	  :presence => true,
-	  :numericality => {
-	  	:greater_than_or_equal_to => 0
-	  }
+	  :numericality => true
 
 	validates :animal_id,
 	  :presence => true,
@@ -168,5 +120,5 @@ class Sample < ActiveRecord::Base
 	  :numericality => {
 	  	:only_integer => true
 	  }
-
+	# TODO: Write a validation to detect duplicates
 end
