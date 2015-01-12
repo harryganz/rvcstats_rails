@@ -23,3 +23,6 @@
 *.sublime-project
 *.sublime-workspace
 log/
+
+# Ignore Seed Data 
+/db/seed_data/
