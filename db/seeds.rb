@@ -49,39 +49,8 @@ puts "Seeding database with data"
 
 puts "Starting to seed samples table"
 Sample.connection.execute('ALTER SEQUENCE samples_id_seq RESTART WITH 1' ) #Restart id numbering
-# Caching for faster performance
-year = nil
-region = nil
-prot = nil
-strat = nil
-strat_id = nil
-# Keep a count for percent complete output
-l = CSV.read("#{Rails.root}/db/seed_data/AR_2012.csv").length
-n = 0
 CSV.foreach("#{Rails.root}/db/seed_data/ar_2012.csv", :headers => true) do |row|
-	# Check cache
-	unless row['YEAR'].to_i == year && row['REGION'] == region && row['STRAT'] == strat && row['MPA_NR'].to_i > 0 ? 1 : 0 == prot
-		year = row['YEAR'].to_i
-		region = row['REGION']
-		prot = row['MPA_NR'].to_i > 0 ? 1 : 0
-		strat = row['STRAT']
-	end
-	# Set the local animal and stratum variables
-	animal = Animal.where(species_cd: row['SPECIES_CD']).take
-	stratum = Strat.where(
-		:year => year,
-		:region => region,
-		:prot => prot,
-		:strat => strat 
-		).take
-	# Make sure they are not nil
-	if animal.nil?
-		raise "could not find species with species code #{row['SPECIES_CD']}"
-	end
-	if stratum.nil?
-		raise "could not find stratum with year #{year}, stratum #{strat}, region #{region}, and protected status #{prot}"
-	end
-	s = Sample.new(
+ Sample.create(
 		month: row['MONTH'].to_i,
 		day: row['DAY'].to_i,
 		primary_sample_unit: row['PRIMARY_SAMPLE_UNIT'],
@@ -101,15 +70,5 @@ CSV.foreach("#{Rails.root}/db/seed_data/ar_2012.csv", :headers => true) do |row|
 		animal_id: animal.id,
 		strat_id: stratum.id
 		)
-	if s.valid?
-		s.save
-	else
-		errors = s.errors.full_messages
-		raise "Sample Id:#{s.inspect} not valid for the following resons, #{errors.each {|m| puts m}}"
-	end
-	n += 1
-	if n % (l/20).floor == 0 
-		puts "#{(n.to_f/l * 100).ceil} percent complete"
-	end
 end
 puts "finished seeding samples table"
