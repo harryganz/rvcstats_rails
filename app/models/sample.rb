@@ -128,5 +128,5 @@ class Sample < ActiveRecord::Base
 	scope :with_region, -> region {joins(:stratum).where(:strats => {region: region}) if region.present?}
 	scope :with_stratum, -> stratum {joins(:stratum).where(:strats => {strat: stratum}) if stratum.present?}
 	scope :is_protected, -> prot {joins(:stratum).where(:strats => {prot: prot}) if prot.present?}
-	scope :when_present, -> p {where('samples.num > ?', p == 1 ? 0 : -1) if p.present?}
+	scope :when_present, -> p {where('num > 0') if p.present?} #This is a total hack as it will always return when_present when p != nil
 end
