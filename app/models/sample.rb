@@ -121,4 +121,12 @@ class Sample < ActiveRecord::Base
 	  	:only_integer => true
 	  }
 	# TODO: Write a validation to detect duplicates
+
+	# Scopes and Methods
+	scope :with_species, -> species {joins(:species).where(:animals => {species_cd: species}) if species.present?}
+	scope :with_year, -> year {joins(:stratum).where(:strats => {year: year}) if year.present?}
+	scope :with_region, -> region {joins(:stratum).where(:strats => {region: region}) if region.present?}
+	scope :with_stratum, -> stratum {joins(:stratum).where(:strats => {strat: stratum}) if stratum.present?}
+	scope :is_protected, -> prot {joins(:stratum).where(:strats => {prot: prot}) if prot.present?}
+	scope :when_present, -> p {where('samples.num > ?', p == 1 ? 0 : -1) if p.present?}
 end
