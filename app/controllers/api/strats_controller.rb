@@ -6,6 +6,7 @@ class Api::StratsController < ApplicationController
   private 
   	#Whitelist allowed parameters
   	def query_params 
-  		params.permit(:strat => [], :region => [], :year => [], :protected => [])
+  		raise 'prot cannot have more than one argument' if params[:prot].present? && params[:prot].length > 1
+  		params.permit(:strat => [], :region => [], :year => [], :prot => [])
   	end
 end
