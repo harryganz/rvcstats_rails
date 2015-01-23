@@ -67,7 +67,7 @@ CSV.foreach("#{Rails.root}/db/seed_data/ar_2012.csv", :headers => true) do |row|
 			"SELECT id FROM strats WHERE year = '#{row['YEAR']}'"\
 			" AND region = '#{row['REGION']}'"\
 			" AND strat = '#{row['STRAT']}'"\
-			" AND prot = '#{(row['MPA_NR'].to_i > 0 ? 1 : 0)}'"
+			" AND prot = '#{row['PROT'].to_i}'"
 			).getvalue(0,0)
 # Execute insert statement
  sample_conn.execute(
