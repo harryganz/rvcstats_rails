@@ -6,8 +6,8 @@ class Strat < ActiveRecord::Base
 	CD_REGEX = /\A[A-Z]{3}\s{1}(?:[A-Z]{4}|[A-Z]{3}[.]{1})\Z/
 	NAME_REGEX = /\A[A-Za-z\s]+\Z/
 
-	validates :year, 
-	:presence => true, 
+	validates :year,
+	:presence => true,
 	:numericality => {
 		:greater_than => 1986,
 		:less_than_or_equal_to => Time.now.year,
@@ -19,16 +19,16 @@ class Strat < ActiveRecord::Base
 	  :presence => true,
 	  :uniqueness => {
 	  	:scope => [:year, :region, :prot],
-	  	:message => 'must be unique for each comnination of
+	  	:message => 'must be unique for each combination of
 	  	year, region, and protected status'
 	  }
 
-	validates :region, 
+	validates :region,
 	  :presence => true,
 	  :format => {
 	  	:with => CD_REGEX,
-	  	:message => 'must consist of 
-	  	3 capital letters, a space, and 
+	  	:message => 'must consist of
+	  	3 capital letters, a space, and
 	  	4 capital letters'
 	  }
 
@@ -39,7 +39,7 @@ class Strat < ActiveRecord::Base
 	  }
 
 	validates :grid_size,
-	 :presence => true, 
+	 :presence => true,
 	 :numericality => {
 	 	:only_integer => true,
 	 	:greater_than => 0
