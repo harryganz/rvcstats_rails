@@ -50,15 +50,16 @@ end
 puts "Finished seeding strats table"
 
 puts "Starting to seed samples table"
+Sample.delete_all
 Sample.connection.execute('ALTER SEQUENCE samples_id_seq RESTART WITH 1' ) #Restart id numbering
-l = CSV.read("#{Rails.root}/db/seed_data/ar_2012.csv").length
-n = 0
+l = CSV.read("#{Rails.root}/db/seed_data/fk2010_2012.csv").length
+n = 1
 t = Time.now
 # Set up all connections beforehand
 animal_conn = Animal.connection
 strat_conn = Strat.connection
 sample_conn = Sample.connection
-CSV.foreach("#{Rails.root}/db/seed_data/ar_2012.csv", :headers => true) do |row|
+CSV.foreach("#{Rails.root}/db/seed_data/fk2010_2012.csv", :headers => true) do |row|
 	# Query animals and strats for relavent IDs
  animal_id = animal_conn.execute(
  	"SELECT id FROM animals WHERE species_cd = '#{row['SPECIES_CD']}'"
@@ -79,10 +80,10 @@ CSV.foreach("#{Rails.root}/db/seed_data/ar_2012.csv", :headers => true) do |row|
  		"'#{row['LEN']}', '#{animal_id}', '#{strat_id}', '#{Time.now}', '#{Time.now}')"
  	)
 # Track progress
- n += 1
  if n % (l/20) == 0
  	puts "#{(n.to_f/l * 100).ceil} percent complete"
  	puts "ET: #{(Time.now - t).round(3)} seconds"
  end
+ n += 1
 end
 puts "finished seeding samples table"
