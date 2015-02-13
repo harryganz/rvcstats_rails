@@ -2,7 +2,7 @@ require 'csv'
 namespace :species do
   desc "migrates new species to database from csv file"
   task migrate: :environment do
-    puts "starting to add species"
+    puts "starting to migrate species"
     file = ENV['file'].to_s
     CSV.foreach(file, :headers => true) do |row|
       begin
@@ -17,6 +17,6 @@ namespace :species do
         "for the following reasons #{errors.each {|m| puts m}}"
       end
     end
-    puts "finished adding species"
+    puts "finished migrating species"
   end
 end
