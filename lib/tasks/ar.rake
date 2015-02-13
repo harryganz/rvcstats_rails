@@ -5,7 +5,7 @@ namespace :ar do
   task migrate: :environment do
     file = ENV['file'].to_s #get the file path from the environment
     # Set up loop variables
-    id = Sample.last.id+1 # starting id
+    id = Sample.all.length > 0 ? Sample.last.id+1 : 1
     l = CSV.read(file).length #number of rows in csv
     n = 1
     t = Time.now
