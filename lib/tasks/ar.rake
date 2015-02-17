@@ -17,7 +17,7 @@ namespace :ar do
     # Check for duplicates
     year = conn["YEAR"][1]
     region = conn["REGION"][1]
-    strat = Strat.where(:year = year, :region => region).first
+    strat = Strat.where(:year => year, :region => region).first
     unless strat.present? & strat.samples.empty?
       raise "Samples from year:#{year} and region:#{region}"\
        " already found in database"
