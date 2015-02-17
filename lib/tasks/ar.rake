@@ -4,16 +4,25 @@ namespace :ar do
   desc "migrates new AR data from csv file"
   task migrate: :environment do
     file = ENV['file'].to_s #get the file path from the environment
+    conn = CSV.read(file, :headers => true)
     # Set up loop variables
     id = Sample.all.length > 0 ? Sample.last.id+1 : 1
-    l = CSV.read(file).length #number of rows in csv
+    l = conn.length #number of rows in csv
     n = 1
     t = Time.now
     # Set up all connections beforehand
     animal_conn = Animal.connection
     strat_conn = Strat.connection
     sample_conn = Sample.connection
-  # Start loop
+    # Check for duplicates
+    year = conn["YEAR"][1]
+    region = conn["REGION"][1]
+    strat = Strat.where(:year = year, :region => region).first
+    unless strat.present? & strat.samples.empty?
+      raise "Samples from year:#{year} and region:#{region}"\
+       " already found in database"
+    end
+    # Start loop
     puts "started migrating new samples"
     CSV.foreach(file, :headers => true) do |row|
       # Query animals and strats for relevant IDs
