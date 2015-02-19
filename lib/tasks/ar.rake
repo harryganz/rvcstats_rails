@@ -6,7 +6,7 @@ namespace :ar do
     file = ENV['file'].to_s #get the file path from the environment
     conn = CSV.read(file, :headers => true)
     # Set up loop variables
-    id = Sample.all.length > 0 ? Sample.last.id+1 : 1
+    id = Sample.first.nil? ? 1 : Sample.last.id+1
     l = conn.length #number of rows in csv
     n = 1
     t = Time.now
