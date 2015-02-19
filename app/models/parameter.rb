@@ -20,6 +20,10 @@ class Parameter < ActiveRecord::Base
       validates :wlen_b, :allow_blank => true,
        :numericality => true
 
+      validates :animal_id, :presence => true,
+       :numericality => {
+         :only_integer => true
+       }
     # Scopes
     scope :with_species, -> species {joins(:species).where(:animals =>
       {species_cd: species}) if species.present?}
