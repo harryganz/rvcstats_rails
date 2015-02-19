@@ -21,6 +21,7 @@ class Parameter < ActiveRecord::Base
        :numericality => true
 
       validates :animal_id, :presence => true,
+       :uniqueness => true,
        :numericality => {
          :only_integer => true
        }
