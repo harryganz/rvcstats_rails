@@ -7,23 +7,29 @@ require 'csv'
 #   cities = City.create([{ name: 'Chicago' }', { name: 'Copenhagen' }'])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 puts "Seeding database with data"
-# Seed species data
-Animal.delete_all
-Animal.connection.execute( 'ALTER SEQUENCE animals_id_seq RESTART WITH 1' ) # Restart id numbering
-ENV['file'] = "#{Rails.root}/db/seed_data/RVC_Species_List.csv"
-# Invoke rake task in lib/tasks
-Rake::Task['species:migrate'].invoke
+# # Seed species data
+# Animal.delete_all
+# Animal.connection.execute( 'ALTER SEQUENCE animals_id_seq RESTART WITH 1' ) # Restart id numbering
+# ENV['file'] = "#{Rails.root}/db/seed_data/RVC_Species_List.csv"
+# # Invoke rake task in lib/tasks
+# Rake::Task['species:migrate'].invoke
 
-# Seed stratum data
-Strat.delete_all
-Strat.connection.execute( 'ALTER SEQUENCE strats_id_seq RESTART WITH 1' ) #Restart id numbering
-ENV['file'] = "#{Rails.root}/db/seed_data/RVC_Strat_List.csv"
-Rake::Task['ntot:migrate'].invoke
+#Seed life history data
+Parameter.delete_all
+Parameter.connection.execute( 'ALTER SEQUENCE parameters_id_seq RESTART WITH 1')
+ENV['file'] = "#{Rails.root}/db/seed_data/RVC_Lhp.csv"
+Rake::Task['lh:migrate'].invoke
 
-# Seed Sample data
-Sample.delete_all
-Sample.connection.execute('ALTER SEQUENCE samples_id_seq RESTART WITH 1' ) #Restart id numbering
-ENV['file'] = "#{Rails.root}/db/seed_data/fk2010_2012.csv"
-Rake::Task['ar:migrate'].invoke
+# # Seed stratum data
+# Strat.delete_all
+# Strat.connection.execute( 'ALTER SEQUENCE strats_id_seq RESTART WITH 1' ) #Restart id numbering
+# ENV['file'] = "#{Rails.root}/db/seed_data/RVC_Strat_List.csv"
+# Rake::Task['ntot:migrate'].invoke
+#
+# # Seed Sample data
+# Sample.delete_all
+# Sample.connection.execute('ALTER SEQUENCE samples_id_seq RESTART WITH 1' ) #Restart id numbering
+# ENV['file'] = "#{Rails.root}/db/seed_data/fk2010_2012.csv"
+# Rake::Task['ar:migrate'].invoke
 
 puts "completed seeding database with data"
