@@ -1,6 +1,6 @@
 class Sample < ActiveRecord::Base
-	#Relationships 
-	belongs_to :stratum, :class_name => 'Strat', :foreign_key => 'strat_id' 
+	#Relationships
+	belongs_to :stratum, :class_name => 'Strat', :foreign_key => 'strat_id'
 	belongs_to :species, :class_name => 'Animal', :foreign_key => 'animal_id'
 
 	#Validations
@@ -22,7 +22,7 @@ class Sample < ActiveRecord::Base
 	  	:less_than => 32
 	  }
 
-	validates :primary_sample_unit, 
+	validates :primary_sample_unit,
 	  :presence => true
 
 	validates :zone_nr,
@@ -123,10 +123,10 @@ class Sample < ActiveRecord::Base
 	# TODO: Write a validation to detect duplicates
 
 	# Scopes and Methods
-	scope :with_species, -> species {joins(:species).where(:animals => {species_cd: species}) if species.present?}
-	scope :with_year, -> year {joins(:stratum).where(:strats => {year: year}) if year.present?}
-	scope :with_region, -> region {joins(:stratum).where(:strats => {region: region}) if region.present?}
-	scope :with_stratum, -> stratum {joins(:stratum).where(:strats => {strat: stratum}) if stratum.present?}
-	scope :is_protected, -> prot {joins(:stratum).where(:strats => {prot: prot}) if prot.present?}
-	scope :when_present, -> p {where('num > ?', p.first == '1' ? 0 : -1) if p.present?} 
+	scope :with_species, -> species {includes(:species).where(:animals => {species_cd: species}) if species.present?}
+	scope :with_year, -> year {includes(:stratum).where(:strats => {year: year}) if year.present?}
+	scope :with_region, -> region {includes(:stratum).where(:strats => {region: region}) if region.present?}
+	scope :with_stratum, -> stratum {includes(:stratum).where(:strats => {strat: stratum}) if stratum.present?}
+	scope :is_protected, -> prot {includes(:stratum).where(:strats => {prot: prot}) if prot.present?}
+	scope :when_present, -> p {where('num > ?', p.first == '1' ? 0 : -1) if p.present?}
 end
