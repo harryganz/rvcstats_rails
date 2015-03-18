@@ -5,13 +5,16 @@ namespace :species do
     puts "starting to migrate species"
     file = ENV['file'].to_s
     CSV.foreach(file, :headers => true) do |row|
-      begin
-        a = Animal.find_or_create_by(
-        species_cd: row['SPECIES_CD'],
+      a = Animal.find_or_initialize_by(
+        species_cd: row['SPECIES_CD']
+      )
+      a.assign_attributes(
         sciname: row['SCINAME'],
         comname: row['COMNAME']
-        )
-      rescue
+      )
+      if a.valid?
+        a.save
+      else
         errors = a.errors.full_messages
         raise "Species #{a.species_cd} not valid, "\
         "for the following reasons #{errors.each {|m| puts m}}"
