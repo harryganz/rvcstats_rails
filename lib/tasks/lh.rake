@@ -9,7 +9,7 @@ namespace :lh do #start 1
         raise "Species #{row['SPECIES_CD']} not found in database"
       end #end 5
       p = Parameter.find_or_initialize_by(animal_id: a.id)
-      p.update(
+      p.assign_attributes(
         length_at_capture: (row['LC'].nil? ? nil : row['LC'].to_f),
         length_at_maturity: (row['LM'].nil? ? nil : row['LM'].to_f),
         wlen_a: (row['WLEN_A'].nil? ? nil : row['WLEN_A'].to_f),
