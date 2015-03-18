@@ -33,9 +33,10 @@ class Strat < ActiveRecord::Base
 	  }
 
 	validates :prot,
+		:numericality => true,
 	  :inclusion => {
-	  	:in => [0, 1],
-	  	:message => 'must be 0 or 1'
+	  	:in => [0, 1, 2],
+	  	:message => 'must be 0, 1 or 2'
 	  }
 
 	validates :grid_size,
