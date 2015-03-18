@@ -9,13 +9,13 @@ class Animal < ActiveRecord::Base
 	# 3 Caps + space + (4 Caps Or 3 Caps and a period)
 	SCI_REGEX = /\A[A-Z]{1}[a-z]+\s{1}(?:[a-z]+|sp\.)\Z/
 		#A capital followed by lowercase 1 space and the rest lowercase letters or sp.
-	COM_REGEX = /\A[A-Za-z\.\s]+\Z/
+	COM_REGEX = /\A[A-Z][a-z]+(?:\s[A-Z][a-z\.]+)*?\Z/
 
 	validates :comname,
 		:allow_blank => true,
 		:format => {
 			:with => COM_REGEX,
-			:message => 'must contain only spaces letters periods and hyphens'
+			:message => 'must contain only spaces letters and periods'
 		}
 
 	validates :species_cd, :presence => true,
