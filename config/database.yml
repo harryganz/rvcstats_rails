@@ -17,8 +17,8 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  username: harry
-  password: sarcops214
+  username: jeremiaheb
+  password: noaaRails
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 5
@@ -83,5 +83,5 @@ test:
 production:
   <<: *default
   database: rvcstats_rails_production
-  username: rvcstats_rails
+  username: jeremiaheb
   password: <%= ENV['RVCSTATS_RAILS_DATABASE_PASSWORD'] %>
