@@ -18,9 +18,7 @@ require 'capistrano/deploy'
 # require 'capistrano/chruby'
 require 'capistrano/bundler'
 require 'capistrano/rails'
-require 'capistrano/rbenv'
-set :rbenv_type, :system
-set :rbenv_ruby, '2.2.1p85'
+#require 'capistrano/rbenv'
 # require 'capistrano/rails/migrations'
 
 # Loads custom tasks from `lib/capistrano/tasks' if you have any defined.
