@@ -18,9 +18,12 @@ namespace :ar do
     year = conn["YEAR"][1]
     region = conn["REGION"][1]
     strat = Strat.where(:year => year, :region => region).first
-    unless strat.present? & strat.samples.empty?
-      raise "Samples from year:#{year} and region:#{region}"\
-       " already found in database"
+    if strat.nil?
+      raise "Strata from year:#{year} and region:#{region}"\
+       " not found in database"
+     elsif !strat.samples.empty?
+       raise "Samples from year:#{year} and region:#{region}"\
+        " already found in database"  
     end
     # Start loop
     puts "started migrating new samples"
