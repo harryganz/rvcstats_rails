@@ -29,7 +29,17 @@ Rake::Task['ntot:migrate'].invoke
 # Seed Sample data
 Sample.delete_all
 Sample.connection.execute('ALTER SEQUENCE samples_id_seq RESTART WITH 1' ) #Restart id numbering
-ENV['file'] = "#{Rails.root}/db/seed_data/fk2010_2012.csv"
+puts "migrating 2012 data"
+ENV['file'] = "#{Rails.root}/db/seed_data/fk2012_dat2.csv"
+Rake::Task['ar:migrate'].invoke
+puts "migrating 2011 data"
+ENV['file'] = "#{Rails.root}/db/seed_data/fk2011_dat2.csv"
+Rake::Task['ar:migrate'].invoke
+puts "migrating 2010 data"
+ENV['file'] = "#{Rails.root}/db/seed_data/fk2010_dat2.csv"
+Rake::Task['ar:migrate'].invoke
+puts "migrating 2009 data"
+ENV['file'] = "#{Rails.root}/db/seed_data/fk2009_dat2.csv"
 Rake::Task['ar:migrate'].invoke
 
 puts "completed seeding database with data"
