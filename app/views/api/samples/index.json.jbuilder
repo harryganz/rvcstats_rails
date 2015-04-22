@@ -11,6 +11,7 @@ json.array! @samples do |s|
 	json.SPECIES_CD s.species.species_cd
 	json.TIME_SEEN s.time_seen
 	json.UNDERWATER_VISIBILITY s.underwater_visibility
+	json.DEPTH s.depth 
 	json.LEN s.len
 	json.NUM s.num
 end
