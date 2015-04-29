@@ -8,7 +8,9 @@ namespace :ntot do
         year: row['YEAR'].to_i,
         region: row['REGION'],
         strat: row['STRAT'],
-        prot: row['PROT'].to_i
+        prot: row['PROT'].to_i,
+        rugosity_cd: row['RUGOSITY_CD'].present? ? row['RUGOSITY_CD'].to_i : 0,
+        rfhab: row['RFHAB'].present? ? row['RFHAB'] : row['STRAT'] 
       )
       s.assign_attributes(
         ntot: row['NTOT'].to_i,
