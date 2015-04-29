@@ -23,7 +23,7 @@ namespace :ar do
        " not found in database"
      elsif !strat.samples.empty?
        raise "Samples from year:#{year} and region:#{region}"\
-        " already found in database"  
+        " already found in database"
     end
     # Start loop
     puts "started migrating new samples"
@@ -52,8 +52,8 @@ namespace :ar do
       # Execute insert statement
       sample_conn.execute(
       "INSERT INTO samples VALUES('#{id}', '#{row['MONTH']}', '#{row['DAY']}', "\
-      "'#{row['PRIMARY_SAMPLE_UNIT']}', '#{row['ZONE_NR']}', '#{row['SUBREGION_NR']}',"\
-      "'#{row['MAPGRID_NR']}',  '#{row['MPA_NR']}', '#{row['TIME_SEEN']}', '#{row['STATION_NR']}',"\
+      "'#{row['PRIMARY_SAMPLE_UNIT']}', '#{row['ZONE_NR'].to_i}', '#{row['SUBREGION_NR']}',"\
+      "'#{row['MAPGRID_NR'].to_i}',  '#{row['MPA_NR']}', '#{row['TIME_SEEN']}', '#{row['STATION_NR']}',"\
       "'#{row['LAT_DEGREES']}', '#{row['LON_DEGREES']}', '#{row['DEPTH']}',"\
       "'#{row['UNDERWATER_VISIBILITY']}', '#{row['HABITAT_CD']}', '#{row['NUM']}',"\
       "'#{row['LEN']}', '#{animal_id}', '#{strat_id}', '#{Time.now}', '#{Time.now}')"
