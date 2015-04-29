@@ -9,9 +9,9 @@ class Strat < ActiveRecord::Base
 	validates :year,
 	:presence => true,
 	:numericality => {
-		:greater_than => 1986,
+		:greater_than => 1993,
 		:less_than_or_equal_to => Time.now.year,
-		:message => 'must be between 1987 and the current year'
+		:message => 'must be between 1994 and the current year'
 	}
 
 
@@ -25,12 +25,9 @@ class Strat < ActiveRecord::Base
 
 	validates :region,
 	  :presence => true,
-	  :format => {
-	  	:with => CD_REGEX,
-	  	:message => 'must consist of
-	  	3 capital letters, a space, and
-	  	4 capital letters'
-	  }
+	  :inclusion => {
+			:in => ['FLA KEYS', 'DRTO', 'SEFCRI']
+		}
 
 	validates :prot,
 		:numericality => true,
@@ -52,4 +49,16 @@ class Strat < ActiveRecord::Base
 	  	:only_integer => true,
 	  	:greater_than_or_equal_to => 0
 	  }
+
+	validates :rfhab,
+	 :presence => true
+
+	validates :rugosity_cd,
+	 :presence => true,
+	 :numericality => {
+		:only_integer => true,
+		:greater_than => -1,
+		:less_than => 3
+	}
+
 end
