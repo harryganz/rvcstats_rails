@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150219142625) do
+ActiveRecord::Schema.define(version: 20150429140206) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -73,6 +73,8 @@ ActiveRecord::Schema.define(version: 20150219142625) do
     t.integer  "grid_size"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "rfhab"
+    t.integer  "rugosity_cd"
   end
 
   add_index "strats", ["year", "region", "strat", "prot"], name: "index_strats_on_year_and_region_and_strat_and_prot", unique: true, using: :btree
