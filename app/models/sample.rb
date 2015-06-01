@@ -2,6 +2,7 @@ class Sample < ActiveRecord::Base
 	#Relationships
 	belongs_to :stratum, :class_name => 'Strat', :foreign_key => 'strat_id'
 	belongs_to :species, :class_name => 'Animal', :foreign_key => 'animal_id'
+	belongs_to :diversity
 
 	#Validations
 	CD_REGEX = /\A[A-Z]{3}\s{1}(?:[A-Z]{4}|[A-Z]{3}[.]{1})\Z/

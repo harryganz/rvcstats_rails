@@ -1,6 +1,7 @@
 class Strat < ActiveRecord::Base
 	#Relationships
 	has_many :samples
+	has_many :diversities
 
 	#Validations
 	CD_REGEX = /\A[A-Z]{3}\s{1}(?:[A-Z]{4}|[A-Z]{3}[.]{1})\Z/
