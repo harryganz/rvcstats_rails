@@ -121,6 +121,12 @@ class Sample < ActiveRecord::Base
 	  :numericality => {
 	  	:only_integer => true
 	  }
+
+	validates :diversity_id,
+		:presence => true,
+		:numericality => {
+			:only_integer => true
+		}
 	# TODO: Write a validation to detect duplicates
 
 	# Scopes and Methods
