@@ -9,7 +9,7 @@ class Diversity < ActiveRecord::Base
   validates :station_nr,
     :presence => :true,
     :uniqueness => {
-      :scope => [:primary_sample_unit],
+      :scope => [:primary_sample_unit, :strat_id],
       :message => 'station_nr cannot be duplicated within a PSU'
       }
 
