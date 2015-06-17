@@ -54,4 +54,19 @@ sample_files.each do |f|
   ENV['file'] = f
   Rake::Task['ar:migrate'].execute
 end
+puts "Finished seeding sample data"
+
+# Seed Diversity Data
+puts "Seeding Diversity Data"
+Diverity.delete_all
+Diversity.connection.execute('ALTER SEQUENCE diversities_id_seq RESTART WITH 1')
+# Unique year and region combinations
+input_vars = Strat.all.pluck(:year, :region).uniq
+# For each unique year and region, generate diverity data
+input_vars.each do |i|
+  ENV['YEAR'] = i[0]
+  ENV['REGION'] = i[1]
+  Rake::Task['diversity:generate'].execute
+end
+
 puts "completed seeding database with data"
