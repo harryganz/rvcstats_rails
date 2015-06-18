@@ -1,4 +1,4 @@
-namespace :diversity do
+amespace :diversity do
   desc "generates diversity data from sample data"
 
   # Generates diversity data from sample data for a given year
@@ -12,57 +12,52 @@ namespace :diversity do
     region = ENV["REGION"].to_s #get the region
 
     # Establish a connection to the database
-    strats_conn = Strat.connection
     samples_conn = Sample.connection
-    # Find all the strat_ids belonging to the year, region
-    strata = strats_conn.execute("SELECT strats.id FROM strats WHERE
-     year = #{year} AND region = '#{region}'").map{|s| s["id"]}
-    if(strata.length == 0)
-      raise("No strata found for year: #{year} and region: #{region}")
-    end
-    # Variables to track loop
-    l = strata.length
-    t = Time.now
-    n = 0
+    strats_conn = Strat.connection
 
-    # While length strats > 0, pop off the last stratum and get all samples
-    # belonging to it
-    while strata.length > 0
-      stratum = strata.pop
-      samples = samples_conn.execute("SELECT samples.id FROM samples WHERE
-      samples.strat_id = #{stratum}").map{|s| s["id"]}
-      # While length samples > 0, select all samples belonging to one ssu,
-      # and calculate richness, then remove ssu from samples
-      while samples.length > 0
-        sample = samples_conn.execute("SELECT primary_sample_unit, station_nr
-         FROM samples WHERE id = #{samples[0]}")[0]
-        selected = samples_conn.execute("SELECT id, animal_id, num FROM samples
-        WHERE strat_id = #{stratum}
-        AND primary_sample_unit = '#{sample["primary_sample_unit"]}'
-        AND station_nr = #{sample["station_nr"]}")
-
-        # Calculate richness for selected
-        richness = calculate_richness(selected)
-        # Intialize and save a diversity object for that ssu
-        d = Diversity.new(primary_sample_unit: sample["primary_sample_unit"],
-        station_nr: sample["station_nr"], richness: richness,
-        strat_id: stratum)
-        if d.valid?
-          d.save
-        else
-          errors = d.errors.full_messages
-          raise("diversity record could not be saved for the following reason(s):"\
-          "#{errors}")
-        end
-        # Remove selected from samples
-        samples = samples - selected.map{|k| k["id"]}
-      end
-      # Track loop progress
-      n = n + 1
-      puts "#{n} out of #{l} strata migrated"
-      puts "ET: #{(Time.now - t).round} seconds"
+    # Select ids for all strata in year/region
+    strata_ids = strats_conn.execute("SELECT strats.id FROM strats WHERE
+     strats.year = #{year} AND strats.region = '#{region}'").map{|s| s["id"].to_i}
+    # Raise error if no strata found
+    if strata_ids.length == 0
+      raise "no strats found for year: #{year} and region: #{region}"
     end
-    puts "finished calculating species richness"
+
+    # Select all samples in those strata
+    domain_samples = samples_conn.execute("SELECT samples.id, samples.animal_id,
+     samples.strat_id, samples.primary_sample_unit, samples.station_nr,
+     samples.num FROM samples WHERE strat_id IN (#{strata_ids.join(',')})")
+
+    # Calculate the richness for the domain
+    domain_richness = calculate_richness(domain_samples)
+    # Create and save DomainDiversity object
+    dd = DomainDiversity.new(year: year, region: region,
+     richness: domain_richness)
+    saveIfValid(dd)
+
+    # While strata still remain, pull off one stratum at a time
+    while strata_ids.length > 0
+      # Remove a stratum and save as strat_id
+      strat_id = strata_ids.pop()
+      # An array of the stratum_samples
+      stratum_samples = domain_samples.select{
+        |s| s["strat_id"].to_i == strat_id
+      }
+      # Remove stratum_samples from domain_samples
+      domain_samples = domain_samples.select{
+        |s| s["strat_id"].to_i != strat_id
+      }
+      # Calculate stratum richness
+      stratum_richness = calculate_richness(stratum_samples)
+      # Save stratum diversity object
+      sd = StratumDiversity(strat_id: strat_id, domain_diversity_id: dd.id,
+        richness: stratum_richness)
+      saveIfValid(sd)
+
+      # Get a list off all the PSUs in the stratum
+      
+    end
+
   end
 end
 
@@ -74,4 +69,15 @@ def calculate_richness(s)
   species = present.map{|j| j["animal_id"]}.uniq
   # Return number of unique species
   return species.length
+end
+
+# Saves an active record object if valid or raises error
+def saveIfValid(d)
+  if d.valid?
+    d.save
+  else
+    errors = d.errors.full_messages
+    raise("diversity record could not be saved for the following reason(s):"\
+    "#{errors}")
+  end
 end
