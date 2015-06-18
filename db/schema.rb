@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150601180020) do
+ActiveRecord::Schema.define(version: 20150617140449) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,14 @@ ActiveRecord::Schema.define(version: 20150601180020) do
     t.datetime "updated_at"
   end
 
+  create_table "domain_diversities", force: true do |t|
+    t.string   "region"
+    t.integer  "year"
+    t.integer  "richness"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "parameters", force: true do |t|
     t.float    "length_at_capture"
     t.float    "length_at_maturity"
@@ -46,6 +54,14 @@ ActiveRecord::Schema.define(version: 20150601180020) do
   end
 
   add_index "parameters", ["animal_id"], name: "index_parameters_on_animal_id", using: :btree
+
+  create_table "psu_diversities", force: true do |t|
+    t.string   "primary_sample_unit"
+    t.integer  "strat_diversity_id"
+    t.integer  "richness"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "samples", force: true do |t|
     t.integer  "month"
@@ -73,6 +89,22 @@ ActiveRecord::Schema.define(version: 20150601180020) do
 
   add_index "samples", ["animal_id"], name: "index_samples_on_animal_id", using: :btree
   add_index "samples", ["strat_id"], name: "index_samples_on_strat_id", using: :btree
+
+  create_table "ssu_diversities", force: true do |t|
+    t.integer  "psu_diversity_id"
+    t.integer  "station_nr"
+    t.integer  "richness"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "strat_diversities", force: true do |t|
+    t.integer  "strat_id"
+    t.integer  "domain_diversity_id"
+    t.integer  "richness"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "strats", force: true do |t|
     t.integer  "year"
