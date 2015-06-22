@@ -4,13 +4,13 @@ namespace :ntot do
     puts 'starting to migrate strata'
     file = ENV['file'].to_s
     CSV.foreach(file, :headers => true) do |row|
+      d = Domain.where(year: row['YEAR'], region: row['REGION']).first
       s = Strat.find_or_initialize_by(
-        year: row['YEAR'].to_i,
-        region: row['REGION'],
+        domain_id: d.id,
         strat: row['STRAT'],
         prot: row['PROT'].to_i,
         rugosity_cd: row['RUGOSITY_CD'].present? ? row['RUGOSITY_CD'].to_i : 0,
-        rfhab: row['RFHAB'].present? ? row['RFHAB'] : row['STRAT'] 
+        rfhab: row['RFHAB'].present? ? row['RFHAB'] : row['STRAT']
       )
       s.assign_attributes(
         ntot: row['NTOT'].to_i,
