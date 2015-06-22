@@ -15,7 +15,10 @@ class Domain < ActiveRecord::Base
 	  :presence => true,
 	  :inclusion => {
 			:in => ['FLA KEYS', 'DRTO', 'SEFCRI']
-		}
+		},
+    :uniqueness => {
+      :scope => [:year]
+    }
 
   validates :richness,
     :allow_blank => true,
