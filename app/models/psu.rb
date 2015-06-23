@@ -21,7 +21,10 @@ class Psu < ActiveRecord::Base
 	  }
 
 	validates :primary_sample_unit,
-	  :presence => true
+	  :presence => true,
+    :uniqueness => {
+      :scope => [:strat_id]
+    }
 
 	validates :zone_nr,
 	  :allow_blank => true,
