@@ -16,18 +16,32 @@ namespace :psu do
     end
     # Store each unique psu
     psus = p.uniq
+    # Establish a connection to the database
+    conn = Domain.connection
+    # Variables to track loop progress
+    n = 0
+    l = psus.length
     ## If valid, save each psu
     psus.each do |i|
-      d = Domain.where(year: i[:year], region: i[:region]).first
-      s = Strat.where(domain_id: d.id, strat: i[:strat], prot: i[:prot]).first
-      p = Psu.new(month: i[:month], day: i[:day],
-        primary_sample_unit: i[:primary_sample_unit], zone_nr: i[:zone_nr],
-        subregion_nr: i[:subregion_nr], mapgrid_nr: i[:mapgrid_nr],
-        mpa_nr: i[:mpa_nr], strat_id: s.id)
-      if !p.save
-        errors = p.errors.full_messages
-        raise "The PSU with the code: #{i[:primary_sample_unit]} could "\
-          "not be saved for the following reasons: #{errors.each{|m| puts m}}"
+      # Get the corresponding stratum
+      s = conn.execute("SELECT strats.id FROM domains, strats WHERE"\
+       " domains.id = strats.domain_id AND domains.year = #{i[:year]} "\
+       "AND domains.region = '#{i[:region]}' AND strats.strat = '#{i[:strat]}'"\
+       " AND strats.prot = #{i[:prot]}")
+      if s.num_tuples != 1
+        raise "more/less than 1 strats match input year: #{i[:year]}, "\
+          "region: #{i[:region]}, strat: #{i[:strat]}, prot: #{i[:prot]}"
+      end
+      # Insert psus into psu table
+      conn.execute("INSERT INTO psus (month, day, primary_sample_unit, "\
+      "zone_nr, subregion_nr, mapgrid_nr, mpa_nr, strat_id) VALUES "\
+      "(#{i[:month]},#{i[:day]},'#{i[:primary_sample_unit]}',"\
+      "#{i[:zone_nr]},#{i[:subregion_nr]},#{i[:mapgrid_nr]},"\
+      "#{i[:mpa_nr]},#{s[0]["id"].to_i})")
+      # Track loop progress
+      n += 1
+      if n % (l.to_f/20).round == 0
+        puts "#{(n.to_f/l * 100).round} percent complete"
       end
     end
     puts "done migrating PSUs"
