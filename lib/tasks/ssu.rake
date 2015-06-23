@@ -2,7 +2,7 @@ require 'csv'
 namespace :ssu do
   desc 'migrates ssus from AR data'
   task migrate: :environment do
-    puts "starting migrating SSUs"
+    puts "starting to migrate SSUs"
     file = ENV["file"].to_s
     # Read the csv file
     csv = CSV.read(file, :headers => true)
@@ -20,6 +20,10 @@ namespace :ssu do
     ssus = ss.uniq
     # Establish connection to database
     conn = Domain.connection
+    # Variables to track loop progress
+    n = 0
+    l = ssus.length
+    t = Time.now
     # Save SSUs to database, if possible
     ssus.each do |i|
       # Get the ids for the domain, strat, and psu to which the ssu belongs
@@ -35,18 +39,17 @@ namespace :ssu do
           " psu: '#{i[:primary_sample_unit]}'"
       end
       # Save the SSU to the database
-      ssu = Ssu.new(station_nr: i[:station_nr], lat_degrees: i[:lat_degrees],
-       lon_degrees: i[:lon_degrees], depth: i[:depth],
-       underwater_visibility: i[:underwater_visibility],
-       habitat_cd: i[:habitat_cd], psu_id: p[0]["id"])
-       if !ssu.save
-         errors = ssu.errors.full_messages
-         raise "The ssu with year: #{i[:year]},"\
-           " region: #{i[:region]}, strat: #{i[:strat]}, prot: #{i[:prot]},"\
-           " psu: #{i[:primary_sample_unit]} and station_nr: #{i[:station_nr]}"\
-           " could not be saved for the following reasons: "\
-           " #{errors.each{|m| puts m}}"
-        end
+      conn.execute("INSERT INTO ssus (station_nr, lat_degrees, lon_degrees,"\
+      " depth, underwater_visibility, habitat_cd, psu_id)"\
+      " VALUES (#{i[:station_nr]}, #{i[:lat_degrees]},"\
+       "#{i[:lon_degrees]}, #{i[:depth]}, #{i[:underwater_visibility]},"\
+       " '#{i[:habitat_cd]}',  #{p[0]["id"].to_i})")
+       # Track loop progress
+       n += 1
+       if n % (l.to_f/20).round == 0
+         puts "#{(n.to_f/l * 100).round} percent complete"
+         puts "ET: #{(Time.now-t).round} seconds elapsed"
+       end
     end
     puts "finished migrating SSUs"
   end
