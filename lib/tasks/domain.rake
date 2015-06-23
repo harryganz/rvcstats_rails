@@ -14,6 +14,8 @@ namespace :domain do
     domains = d.uniq
     # Try to save each domain, raise error if it
     # cannot
+    n = 0
+    l = domains.length
     domains.each do |d|
       x = Domain.new(d)
       if !x.save
@@ -21,6 +23,11 @@ namespace :domain do
         raise "domain with year: #{d[:year]} and region: #{d[:region]}"\
         " could not be saved for the following reasons:"\
         " #{errors.each{|m| puts m}}"
+      end
+      # Track loop progress
+      n += 1
+      if n % (l.to_f/20).round == 0
+        puts "#{(n.to_f/l * 100).round} percent complete"
       end
     end
     puts "finished migrating domains"
