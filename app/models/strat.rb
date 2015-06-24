@@ -64,4 +64,8 @@ class Strat < ActiveRecord::Base
 		def region
 			return domain.region
 		end
+
+		def samples
+			Sample.joins(ssu: {psu: :strat}).where(strats: {id: id})
+		end
 end
