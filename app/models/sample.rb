@@ -11,8 +11,6 @@ class Sample < ActiveRecord::Base
 	  },
 	  :inclusion => {:in => [1,2,3]}
 
-
-
 	validates :num,
 	  :presence => true,
 	  :numericality => {

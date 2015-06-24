@@ -1,7 +1,7 @@
 class Ssu < ActiveRecord::Base
   # Relationships
   belongs_to :psu
-  has_many :ssus
+  has_many :samples
 
   # Validations
   validates :station_nr,
