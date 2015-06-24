@@ -64,4 +64,8 @@ class Psu < ActiveRecord::Base
       :numericality => {
         :only_integer => true
       }
+  # Methods and scopes
+  def samples
+    Sample.joins(ssu: :psu).where(psus: {id: id})
+  end
 end
