@@ -25,4 +25,8 @@ class Domain < ActiveRecord::Base
     :numericality => {
       :only_integer => true
     }
+  # Methods and Scopes
+  def samples
+    Sample.joins(ssu: {psu: {strat: :domain}}).where(domains: {id: id})
+  end
 end
