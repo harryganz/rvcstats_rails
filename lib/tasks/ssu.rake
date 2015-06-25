@@ -43,7 +43,7 @@ namespace :ssu do
       " depth, underwater_visibility, habitat_cd, psu_id, created_at, "\
       " updated_at) VALUES (#{i[:station_nr]}, #{i[:lat_degrees]},"\
        "#{i[:lon_degrees]}, #{i[:depth]}, #{i[:underwater_visibility]},"\
-       " '#{i[:habitat_cd]}',  #{p[0]["id"].to_i}, #{Time.now}, #{Time.now})")
+       " '#{i[:habitat_cd]}',  #{p[0]["id"].to_i}, '#{Time.now}', '#{Time.now}')")
        # Track loop progress
        n += 1
        if n % (l.to_f/20).round == 0

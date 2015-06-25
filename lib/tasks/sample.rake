@@ -37,7 +37,7 @@ namespace :sample do
        conn.execute("INSERT INTO samples (ssu_id, num, len, time_seen, "\
        "animal_id, created_at, updated_at) VALUES (#{ssu[0]["id"].to_i},"\
        " #{r["NUM"]}, #{r["LEN"]}, #{r["TIME_SEEN"]},"\
-       " #{species[0]["id"].to_i}, #{Time.now}, #{Time.now})")
+       " #{species[0]["id"].to_i}, '#{Time.now}', '#{Time.now}')")
         # Track loop progress
         n += 1
         if n % (l.to_f/20).round == 0

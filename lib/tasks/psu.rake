@@ -38,7 +38,7 @@ namespace :psu do
        " updated_at) VALUES "\
       "(#{i[:month]},#{i[:day]},'#{i[:primary_sample_unit]}',"\
       "#{i[:zone_nr]},#{i[:subregion_nr]},#{i[:mapgrid_nr]},"\
-      "#{i[:mpa_nr]},#{s[0]["id"].to_i},#{Time.now},#{Time.now})")
+      "#{i[:mpa_nr]},#{s[0]["id"].to_i},'#{Time.now}','#{Time.now}')")
       # Track loop progress
       n += 1
       if n % (l.to_f/20).round == 0
