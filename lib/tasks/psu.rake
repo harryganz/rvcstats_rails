@@ -34,10 +34,11 @@ namespace :psu do
       end
       # Insert psus into psu table
       conn.execute("INSERT INTO psus (month, day, primary_sample_unit, "\
-      "zone_nr, subregion_nr, mapgrid_nr, mpa_nr, strat_id) VALUES "\
+      "zone_nr, subregion_nr, mapgrid_nr, mpa_nr, strat_id, created_at,"\
+       " updated_at) VALUES "\
       "(#{i[:month]},#{i[:day]},'#{i[:primary_sample_unit]}',"\
       "#{i[:zone_nr]},#{i[:subregion_nr]},#{i[:mapgrid_nr]},"\
-      "#{i[:mpa_nr]},#{s[0]["id"].to_i})")
+      "#{i[:mpa_nr]},#{s[0]["id"].to_i},#{Time.now},#{Time.now})")
       # Track loop progress
       n += 1
       if n % (l.to_f/20).round == 0

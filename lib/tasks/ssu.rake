@@ -40,10 +40,10 @@ namespace :ssu do
       end
       # Save the SSU to the database
       conn.execute("INSERT INTO ssus (station_nr, lat_degrees, lon_degrees,"\
-      " depth, underwater_visibility, habitat_cd, psu_id)"\
-      " VALUES (#{i[:station_nr]}, #{i[:lat_degrees]},"\
+      " depth, underwater_visibility, habitat_cd, psu_id, created_at, "\
+      " updated_at) VALUES (#{i[:station_nr]}, #{i[:lat_degrees]},"\
        "#{i[:lon_degrees]}, #{i[:depth]}, #{i[:underwater_visibility]},"\
-       " '#{i[:habitat_cd]}',  #{p[0]["id"].to_i})")
+       " '#{i[:habitat_cd]}',  #{p[0]["id"].to_i}, #{Time.now}, #{Time.now})")
        # Track loop progress
        n += 1
        if n % (l.to_f/20).round == 0
