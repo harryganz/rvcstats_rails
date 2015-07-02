@@ -11,7 +11,7 @@ namespace :sample do
     l = CSV.read(file).length
     t = Time.now
     # Loop through CSV and insert sample into samples table
-    csv = CSV.foreach(file, :headers => true) do |r|
+    CSV.foreach(file, :headers => true) do |r|
       # Get ssu_id
       ssu = conn.execute("SELECT ssus.id FROM ssus, psus, strats, domains "\
         "WHERE ssus.psu_id = psus.id AND psus.strat_id = strats.id "\
