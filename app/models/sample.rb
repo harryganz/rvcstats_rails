@@ -36,19 +36,36 @@ class Sample < ActiveRecord::Base
 
 
 	# Scopes and Methods
-	 scope :with_species, -> species {joins(:animal).where(
+	 scope :with_species, -> species {includes(:animal).where(
 		:animals => {species_cd: species}) if species.present?}
-	 scope :with_year, -> year {joins(ssu: {psu: {strat: :domain}}).where(
-		domains: {year: year.to_i}) if year.present?}
-	 scope :with_region, -> region {joins(ssu: {psu: {strat: :domain}}).where(
+	 scope :with_year, -> year {includes(ssu: {psu: {strat: :domain}}).where(
+		domains: {year: year}) if year.present?}
+	 scope :with_region, -> region {includes(ssu: {psu: {strat: :domain}}).where(
 		domains: {region: region}) if region.present?}
-	 scope :with_stratum, -> stratum {joins(ssu: {psu: :strat}).where(
+	 scope :with_stratum, -> stratum {includes(ssu: {psu: :strat}).where(
 		:strats => {strat: stratum}) if stratum.present?}
-	 scope :is_protected, -> prot {joins(ssu: {psu: :strat}).where(
+	 scope :is_protected, -> prot {includes(ssu: {psu: :strat}).where(
 		:strats => {prot: prot.to_i}) if prot.present?}
 	 scope :when_present, -> p {
 		where('num > ?', p.to_i == 1 ? 0 : -1) if p.present?}
+
 	# Methods to create virtual attributes
+	def year
+		return ssu.psu.strat.domain.year
+	end
+
+	def region
+		return ssu.psu.strat.domain.region
+	end
+
+	def strat
+		return ssu.psu.strat.strat
+	end
+
+	def prot
+		return ssu.psu.strat.prot
+	end
+
 	def mpa_nr
 		return ssu.psu.mpa_nr
 	end
@@ -58,7 +75,7 @@ class Sample < ActiveRecord::Base
 	end
 
 	def station_nr
-		return ssu.psu.station_nr
+		return ssu.station_nr
 	end
 
 	def lat_degrees
@@ -67,6 +84,10 @@ class Sample < ActiveRecord::Base
 
 	def lon_degrees
 		return ssu.lon_degrees
+	end
+
+	def species_cd
+		return animal.species_cd
 	end
 
 	def underwater_visibility
