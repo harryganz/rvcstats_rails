@@ -9,10 +9,12 @@ class Api::SamplesController < ApplicationController
   private
 	# Whitelist queryable params
 	def query_params
-		raise 'prot cannot have more than one argument' if params[:prot].present? &&
-     params[:prot].length > 1
-		raise 'present cannot have more than one argument' if params[:present].present?
-     && params[:present].length > 1
+    if params[:prot].present? && params[:prot].length > 1
+		    raise 'prot cannot have more than one argument'
+      end
+    if params[:present].present? && params[:present].length > 1
+		    raise 'present cannot have more than one argument'
+    end 
 		params.permit(:species => [], :year => [], :region => [], :strat => [],
      :prot => [], :present => [])
 	end
