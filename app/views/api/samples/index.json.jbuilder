@@ -1,8 +1,8 @@
 json.array! @samples do |s|
-	json.YEAR s.stratum.year
-	json.REGION s.stratum.region
-	json.STRAT s.stratum.strat
-	json.PROT s.stratum.prot
+	json.YEAR s.year
+	json.REGION s.region
+	json.STRAT s.strat
+	json.PROT s.prot
 	json.MPA_NR s.mpa_nr
 	json.PRIMARY_SAMPLE_UNIT s.primary_sample_unit
 	json.STATION_NR s.station_nr
