@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150617140449) do
+ActiveRecord::Schema.define(version: 20150625163240) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -110,6 +110,19 @@ ActiveRecord::Schema.define(version: 20150617140449) do
     t.integer  "psu_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.float    "max_hard_relief"
+    t.float    "max_soft_relief"
+    t.float    "avg_hard_relief"
+    t.float    "hard_rel_pct_0"
+    t.float    "hard_rel_pct_1"
+    t.float    "hard_rel_pct_2"
+    t.float    "hard_rel_pct_3"
+    t.float    "hard_rel_pct_4"
+    t.float    "pct_sand"
+    t.float    "pct_hard_bottom"
+    t.float    "pct_coral"
+    t.float    "pct_octo"
+    t.float    "pct_sponge"
   end
 
   add_index "ssus", ["psu_id"], name: "index_ssus_on_psu_id", using: :btree
