@@ -15,7 +15,6 @@ namespace :domain do
     # Try to save each domain, raise error if it
     # cannot
     n = 0
-    l = domains.length
     domains.each do |d|
       x = Domain.new(d)
       if !x.save
@@ -26,9 +25,7 @@ namespace :domain do
       end
       # Track loop progress
       n += 1
-      if n % (l.to_f/20).round == 0
-        puts "#{(n.to_f/l * 100).round} percent complete"
-      end
+      puts "#{n} domains migrated"
     end
     puts "finished migrating domains"
   end
