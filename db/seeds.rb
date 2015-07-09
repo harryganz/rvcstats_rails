@@ -25,9 +25,11 @@ Rake::Task['lh:migrate'].invoke
 puts "finished seeding life history data"
 
 # Seed stratum data
-puts "seeding stratum data"
+puts "seeding stratum/domain data"
 Strat.delete_all
 Strat.connection.execute( 'ALTER SEQUENCE strats_id_seq RESTART WITH 1' ) #Restart id numbering
+Domain.delete_all
+Domain.connection.execute( 'ALTER SEQUENCE domains_id_seq RESTART WITH 1')
 # Path to the directory containing stratum files
 stratum_dir = "#{Rails.root}/db/seed_data/stratum_data"
 # Array of filenames of stratum data
@@ -36,6 +38,7 @@ stratum_files = Dir.glob("#{stratum_dir}/**/*.csv")
 stratum_files.each do |f|
   puts "migrating #{f}"
   ENV['file'] = f
+  Rake::Task['domain:migrate'].execute
   Rake::Task['ntot:migrate'].execute
 end
 puts "finished seeding stratum data"
@@ -43,6 +46,10 @@ puts "finished seeding stratum data"
 # Seed Sample data
 puts "seeding sample data"
 Sample.delete_all
+Ssu.delete_all
+Psu.delete_all
+Psu.connection.execute('ALTER SEQUENCE psus_id_seq RESTART WITH 1')
+Ssu.connection.execute('ALTER SEQUENCE ssus_id_seq RESTART WITH 1')
 Sample.connection.execute('ALTER SEQUENCE samples_id_seq RESTART WITH 1' ) #Restart id numbering
 # Path to the directory containing sample data
 sample_dir = "#{Rails.root}/db/seed_data/sample_data"
@@ -55,18 +62,5 @@ sample_files.each do |f|
   Rake::Task['ar:migrate'].execute
 end
 puts "Finished seeding sample data"
-
-# Seed Diversity Data
-puts "Seeding Diversity Data"
-Diverity.delete_all
-Diversity.connection.execute('ALTER SEQUENCE diversities_id_seq RESTART WITH 1')
-# Unique year and region combinations
-input_vars = Strat.all.pluck(:year, :region).uniq
-# For each unique year and region, generate diverity data
-input_vars.each do |i|
-  ENV['YEAR'] = i[0]
-  ENV['REGION'] = i[1]
-  Rake::Task['diversity:generate'].execute
-end
 
 puts "completed seeding database with data"
