@@ -17,7 +17,7 @@ namespace :benthic do
       "WHERE ssus.psu_id = psus.id AND psus.strat_id = strats.id "\
       "AND strats.domain_id = domains.id AND "\
       "domains.year = #{r["YEAR"]} AND domains.region = '#{r["REGION"]}' "\
-      "AND psus.primary_sample_unit = '#{r["PRIMARY_SAMPLE_UNIT"]}' "
+      "AND psus.primary_sample_unit = '#{r["PRIMARY_SAMPLE_UNIT"]}' "\
       "AND ssus.station_nr = #{r["STATION_NR"]}")
       # Check that only 1 ssu selected
       if ssu.num_tuples != 1
@@ -39,7 +39,7 @@ namespace :benthic do
       " pct_coral = #{r["pct_coral"]}"\
       " pct_octo = #{r["pct_octo"]}"\
       " pct_sponge = #{r["pct_sponge"]}"\
-      " updated_at = '#{Time.now}'"
+      " updated_at = '#{Time.now}'"\
       " WHERE id = #{ssu[0]["id"].to_i}")
       # Track loop progress
       n += 1
