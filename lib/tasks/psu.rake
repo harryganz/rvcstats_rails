@@ -16,29 +16,27 @@ namespace :psu do
     end
     # Store each unique psu
     psus = p.uniq
-    # Establish a connection to the database
-    conn = Domain.connection
     # Variables to track loop progress
     n = 0
     l = psus.length
-    ## If valid, save each psu
+    ## Set up table to query from
+    strat_table = Strat.includes(:domain)
     psus.each do |i|
-      # Get the corresponding stratum
-      s = conn.execute("SELECT strats.id FROM domains, strats WHERE"\
-       " domains.id = strats.domain_id AND domains.year = #{i[:year]} "\
-       "AND domains.region = '#{i[:region]}' AND strats.strat = '#{i[:strat]}'"\
-       " AND strats.prot = #{i[:prot]}")
-      if s.num_tuples != 1
-        raise "more/less than 1 strats match input year: #{i[:year]}, "\
-          "region: #{i[:region]}, strat: #{i[:strat]}, prot: #{i[:prot]}"
-      end
-      # Insert psus into psu table
-      conn.execute("INSERT INTO psus (month, day, primary_sample_unit, "\
-      "zone_nr, subregion_nr, mapgrid_nr, mpa_nr, strat_id, created_at,"\
-       " updated_at) VALUES "\
-      "(#{i[:month]},#{i[:day]},'#{i[:primary_sample_unit]}',"\
-      "#{i[:zone_nr]},#{i[:subregion_nr]},#{i[:mapgrid_nr]},"\
-      "#{i[:mpa_nr]},#{s[0]["id"].to_i},'#{Time.now}','#{Time.now}')")
+      # Get the strat_id of the corresponding stratum
+      strat_id = strat_table.where(domains: {year: i[:year],
+        region: i[:region]}).where(strats: {strat: i[:strat],
+          prot: i[:prot]}).pluck('strats.id').first
+      # Initialize the PSU
+      psu = Psu.new(month: i[:month], day: i[:day],
+        primary_sample_unit: i[:primary_sample_unit], zone_nr: i[:zone_nr],
+        subregion_nr: i[:subregion_nr], mapgrid_nr: i[:mapgrid_nr],
+        mpa_nr: i[:mpa_nr], strat_id: strat_id)
+      # Save if valid, else raise error
+      if !psu.save
+        errors = psu.error.full_messages
+        raise "psu could not be saved for the following reasons"\
+         "errors.each{|m| puts m}"
+       end
       # Track loop progress
       n += 1
       if n % (l.to_f/20).round == 0
