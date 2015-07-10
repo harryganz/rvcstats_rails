@@ -33,9 +33,9 @@ namespace :psu do
         mpa_nr: i[:mpa_nr], strat_id: strat_id)
       # Save if valid, else raise error
       if !psu.save
-        errors = psu.error.full_messages
+        errors = psu.errors.full_messages
         raise "psu could not be saved for the following reasons"\
-         "errors.each{|m| puts m}"
+         " #{errors.each{|m| puts m}}"
        end
       # Track loop progress
       n += 1
