@@ -34,8 +34,8 @@ namespace :psu do
       # Save if valid, else raise error
       if !psu.save
         errors = psu.errors.full_messages
-        raise "psu could not be saved for the following reasons"\
-         " #{errors.each{|m| puts m}}"
+        raise "psu with strat_id: #{strat_id} and psu: #{r["PRIMARY_SAMPLE_UNIT"]} "\
+        "could not be saved for the following reasons #{errors.each{|m| puts m}}"
        end
       # Track loop progress
       n += 1
