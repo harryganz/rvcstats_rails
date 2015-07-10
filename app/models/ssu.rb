@@ -6,6 +6,9 @@ class Ssu < ActiveRecord::Base
   # Validations
   validates :station_nr,
 	  :presence => true,
+    :uniqueness => {
+      :scope => [:psu_id]
+    },
 	  :numericality => {
 	  	:only_integer => true,
 	  	:greater_than => 0,
