@@ -18,32 +18,33 @@ namespace :ssu do
     end
     # Get unique set of SSUs
     ssus = ss.uniq
-    # Establish connection to database
-    conn = Domain.connection
+    # Set up a table to query for PSUs
+    psu_table = Psu.includes(strat: :domain)
     # Variables to track loop progress
     n = 0
     l = ssus.length
     t = Time.now
     # Save SSUs to database, if possible
     ssus.each do |i|
-      # Get the ids for the domain, strat, and psu to which the ssu belongs
-      p = conn.execute("SELECT psus.id FROM domains,"\
-      " strats, psus WHERE domains.year = #{i[:year]} AND"\
-      " domains.region = '#{i[:region]}' AND strats.strat = '#{i[:strat]}'"\
-      " AND strats.prot = #{i[:prot]} AND domains.id = strats.domain_id"\
-      " AND strats.id = psus.strat_id AND"\
-      " psus.primary_sample_unit = '#{i[:primary_sample_unit]}'")
-      if p.num_tuples != 1
-        raise "more/less than 1 PSU found for SSU with year: #{i[:year]},"\
-          " region: '#{i[:region]}', strat: '#{i[:strat]}', prot: #{i[:prot]},"\
-          " psu: '#{i[:primary_sample_unit]}'"
-      end
-      # Save the SSU to the database
-      conn.execute("INSERT INTO ssus (station_nr, lat_degrees, lon_degrees,"\
-      " depth, underwater_visibility, habitat_cd, psu_id, created_at, "\
-      " updated_at) VALUES (#{i[:station_nr]}, #{i[:lat_degrees]},"\
-       "#{i[:lon_degrees]}, #{i[:depth]}, #{i[:underwater_visibility]},"\
-       " '#{i[:habitat_cd]}',  #{p[0]["id"].to_i}, '#{Time.now}', '#{Time.now}')")
+      # Get the id for the psu to which the ssu belongs
+      psu_id = psu_table.where(domains: {
+        year: i[:year], region: i[:region]
+        }).where(strats: {
+          strat: i[:strat], prot: i[:prot]
+          }).where(psus: {
+           primary_sample_unit: i[:primary_sample_unit]
+          }).pluck('psus.id').first
+       # Save the SSU to the database
+       ssu = Ssu.new(station_nr: i[:station_nr], lat_degrees: i[:lat_degrees],
+        lon_degrees: i[:lon_degrees], depth: i[:depth],
+        underwater_visibility: i[:underwater_visibility],
+        habitat_cd: i[:habitat_cd], psu_id: psu_id)
+       if !ssu.save
+         errors = ssu.errors.full_messages
+         raise "There were the following problems in saving the ssu with the "\
+          "psu_id: #{psu_id} and the station_nr: #{i[:station_nr]} "\
+          "#{errors.each{|m| puts m}}"
+        end
        # Track loop progress
        n += 1
        if n % (l.to_f/20).round == 0
