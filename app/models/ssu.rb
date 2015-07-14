@@ -145,4 +145,32 @@ class Ssu < ActiveRecord::Base
     :less_than_or_equal_to => 100
   }
 
+  # Methods and scopes
+  scope :with_year, -> year {Ssu.includes(psu: {strat: :domain}).
+   where(domains: {year: year}) if year.present?}
+  scope :with_region, -> region {Ssu.includes(psu: {strat: :domain}).
+   where(domains: {region: region}) if region.present?}
+  scope :with_strat, -> strat {Ssu.includes(psu: :strat).
+   where(strats: {strat: strat}) if strat.present?}
+
+  def year
+    psu.strat.domain.year
+  end
+
+  def region
+    psu.strat.domain.region
+  end
+
+  def strat
+    psu.strat.strat
+  end
+
+  def prot
+    psu.strat.prot
+  end
+  
+  def primary_sample_unit
+    psu.primary_sample_unit
+  end
+
 end
