@@ -4,8 +4,8 @@ namespace :benthic do
   task migrate: :environment do
     file = ENV['file']
     puts "starting to migrate benthic data"
-    # Set up connection to database
-    conn = Domain.connection
+    # Set up table to query ssus
+    ssu_table = Ssu.includes(psu: {strat: :domain})
     # Variables to track loop progress
     n = 0
     l = CSV.read(file).length
@@ -13,34 +13,38 @@ namespace :benthic do
     # Loop through CSV update benthic attributes
     csv = CSV.foreach(file, :headers => true) do |r|
       # Get the ssu to which the current row belongs
-      ssu = conn.execute("SELECT ssus.id FROM ssus, psus, strats, domains "\
-      "WHERE ssus.psu_id = psus.id AND psus.strat_id = strats.id "\
-      "AND strats.domain_id = domains.id AND "\
-      "domains.year = #{r["YEAR"]} AND domains.region = '#{r["REGION"]}' "\
-      "AND psus.primary_sample_unit = '#{r["PRIMARY_SAMPLE_UNIT"]}' "\
-      "AND ssus.station_nr = #{r["STATION_NR"]}")
-      # Check that only 1 ssu selected
-      if ssu.num_tuples != 1
-        raise "more/less than 1 ssu found with the"\
-        " psu: #{r["PRIMARY_SAMPLE_UNIT"]} and the"\
-        " station_nr: #{r["STATION_NR"]}"
-      end
+      # may be
+      ssu_id = ssu_table.where(domains: {
+        year: r["YEAR"], region: r["REGION"]
+        }).where(psus: {
+          primary_sample_unit: r["PRIMARY_SAMPLE_UNIT"]
+          }).where(ssus: {
+            station_nr: r["STATION_NR"]
+            }).pluck('ssus.id').first
       # Update attributes
-      conn.execute("UPDATE ssus SET max_hard_relief = #{r["max_hard_relief"]},"\
-      " max_soft_relief = #{r["max_soft_relief"]},"\
-      " avg_hard_relief = #{r["avg_hard_relief"]},"\
-      " hard_rel_pct_0 = #{r["hard_rel_pct_0"]},"\
-      " hard_rel_pct_1 = #{r["hard_rel_pct_1"]},"\
-      " hard_rel_pct_2 = #{r["hard_rel_pct_2"]},"\
-      " hard_rel_pct_3 = #{r["hard_rel_pct_3"]},"\
-      " hard_rel_pct_4 = #{r["hard_rel_pct_4"]}"\
-      " pct_sand = #{r["pct_sand"]}"\
-      " pct_hard_bottom = #{r["pct_hard_bottom"]}"\
-      " pct_coral = #{r["pct_coral"]}"\
-      " pct_octo = #{r["pct_octo"]}"\
-      " pct_sponge = #{r["pct_sponge"]}"\
-      " updated_at = '#{Time.now}'"\
-      " WHERE id = #{ssu[0]["id"].to_i}")
+      if (!ssu_id.nil?)
+        ssu = Ssu.find(ssu_id)
+        if (!ssu.update(
+          max_hard_relief: r["max_hard_relief"],
+          max_soft_relief: r["max_soft_relief"],
+          avg_hard_relief: r["avg_hard_relief"],
+          hard_rel_pct_0: r["hard_rel_pct_0"],
+          hard_rel_pct_1: r["hard_rel_pct_1"],
+          hard_rel_pct_2: r["hard_rel_pct_2"],
+          hard_rel_pct_3: r["hard_rel_pct_3"],
+          hard_rel_pct_4: r["hard_rel_pct_4"],
+          pct_sand: r["pct_sand"], pct_hard_bottom: r["pct_hard_bottom"],
+          pct_coral: r["pct_coral"], pct_octo: r["pct_octo"],
+          pct_sponge: r["pct_sponge"], pct_rubble: r["pct_rubble"]
+        ))
+          errors = ssu.errors.full_messages
+          raise "the following problems occured while trying to update the "\
+           "ssu with the psu: #{r["PRIMARY_SAMPLE_UNIT"]} and station_nr: "\
+           "#{r["STATION_NR"]} "\
+           "#{errors.each{|m| puts m}}"
+         end
+       end
+
       # Track loop progress
       n += 1
       if n % (l.to_f/20).round == 0
