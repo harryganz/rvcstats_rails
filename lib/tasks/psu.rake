@@ -15,7 +15,7 @@ namespace :psu do
          mpa_nr: r["MPA_NR"]}
     end
     # Store each unique psu
-    psus = p.uniq
+    psus = p.uniq{|v| [v[:primary_sample_unit], v[:year], v[:region]]}
     # Variables to track loop progress
     n = 0
     l = psus.length
@@ -34,7 +34,7 @@ namespace :psu do
       # Save if valid, else raise error
       if !psu.save
         errors = psu.errors.full_messages
-        raise "psu with strat_id: #{strat_id} and psu: #{r["PRIMARY_SAMPLE_UNIT"]} "\
+        raise "psu with strat_id: #{strat_id} and psu: #{i[:primary_sample_unit]} "\
         "could not be saved for the following reasons #{errors.each{|m| puts m}}"
        end
       # Track loop progress
