@@ -120,6 +120,7 @@ ActiveRecord::Schema.define(version: 20150625163240) do
     t.float    "hard_rel_pct_4"
     t.float    "pct_sand"
     t.float    "pct_hard_bottom"
+    t.float    "pct_rubble"
     t.float    "pct_coral"
     t.float    "pct_octo"
     t.float    "pct_sponge"

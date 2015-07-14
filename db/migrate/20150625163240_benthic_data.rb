@@ -10,6 +10,7 @@ class BenthicData < ActiveRecord::Migration
     add_column :ssus, :hard_rel_pct_4, "float"
     add_column :ssus, :pct_sand, "float"
     add_column :ssus, :pct_hard_bottom, "float"
+    add_column :ssus, :pct_rubble, "float"
     add_column :ssus, :pct_coral, "float"
     add_column :ssus, :pct_octo, "float"
     add_column :ssus, :pct_sponge, "float"
