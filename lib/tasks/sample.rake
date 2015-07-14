@@ -27,11 +27,14 @@ namespace :sample do
        # Look up animal_id from species code
        animal_id = Animal.find_by_species_cd(r["SPECIES_CD"]).id
       # Insert sample into samples table
-       conn.execute("INSERT INTO samples (ssu_id, num, len, time_seen, "\
-       "animal_id, created_at, updated_at) VALUES (#{ssu_id},"\
-       " #{r["NUM"]}, #{r["LEN"]}, #{r["TIME_SEEN"]},"\
-       " #{animal_id}, '#{Time.now}', '#{Time.now}')")
-        # Track loop progress
+      sample = Sample.new(ssu_id: ssu_id, num: r["NUM"], len: r["LEN"],
+        time_seen: r["TIME_SEEN"], animal_id: animal_id)
+      if !sample.save
+        errors = sample.errors.full_messages
+        raise "The following problems occurred while trying to save a sample "\
+        "belonging to the psu: #{r["PRIMARY_SAMPLE_UNIT"]} and the ssu: "\
+        "#{r["STATION_NR"]} #{errors.each{|m| puts m}}"
+      end
         n += 1
         if n % (l.to_f/20).round == 0
           puts "#{(n.to_f/l * 100).round} percent complete"
