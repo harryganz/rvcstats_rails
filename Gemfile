@@ -40,7 +40,7 @@ gem 'bootstrap-sass', '~> 3.3.3'
   gem 'capistrano-rbenv', github: "capistrano/rbenv"
 
 # Use debugger
-# gem 'debugger', group: [:development, :test]
+  gem 'byebug', group: [:development, :test]
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin]
