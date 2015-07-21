@@ -10,53 +10,57 @@ namespace :diversity do
     # Get year and region from environment variables
     year = ENV["YEAR"].to_i #get the year
     region = ENV["REGION"].to_s #get the region
-    # Query samples
-    samples = Sample.includes(:stratum).where(strats: {year: year, region: region})
-    # If no samples found, raise error
-    if samples.length == 0
-      raise "no samples found matching year and region"
-    end
 
-    # Variables to keep track of progress
-    l = samples.length
-    n = 0
+    # Establish a connection to the database
+    strats_conn = Strat.connection
+    samples_conn = Sample.connection
+    # Find all the strat_ids belonging to the year, region
+    strata = strats_conn.execute("SELECT strats.id FROM strats WHERE
+     year = #{year} AND region = '#{region}'").map{|s| s["id"]}
+    if(strata.length == 0)
+      raise("No strata found for year: #{year} and region: #{region}")
+    end
+    # Variables to track loop
+    l = strata.length
     t = Time.now
-    # Adds rows to diversities table
-    while samples.length > 0
-      # Select one sample not already selected
-      sample = samples[1]
-      # Select all samples in the same  SSU
-      selected = samples.where(strat_id: sample.strat_id,
-       primary_sample_unit: sample.primary_sample_unit,
-       station_nr: sample.station_nr)
-      # Calculate species richness for that SSU
-      richness = calculate_richness(selected)
-      # Initialize a diversity instance: add psu, ssu, richness and samples
-      # to diversity
-      d = Diversity.new(
-      strat_id: sample.strat_id,
-      primary_sample_unit: sample.primary_sample_unit,
-      station_nr: sample.station_nr,
-      richness: richness)
-      if d.valid?
-        d.save
-      else
-        errors = d.errors.full_messages
-        raise "the following errors occurred in saving the record with\n"\
-          "strat_id: #{d.strat_id}, psu: #{d.primary_sample_unit},"\
-          "station_nr: #{d.station_nr}\n"\
-          "#{errors.each {|m| puts errors}}"
+    n = 0
+
+    # While length strats > 0, pop off the last stratum and get all samples
+    # belonging to it
+    while strata.length > 0
+      stratum = strata.pop
+      samples = samples_conn.execute("SELECT samples.id FROM samples WHERE
+      samples.strat_id = #{stratum}").map{|s| s["id"]}
+      # While length samples > 0, select all samples belonging to one ssu,
+      # and calculate richness, then remove ssu from samples
+      while samples.length > 0
+        sample = samples_conn.execute("SELECT primary_sample_unit, station_nr
+         FROM samples WHERE id = #{samples[0]}")[0]
+        selected = samples_conn.execute("SELECT id, animal_id, num FROM samples
+        WHERE strat_id = #{stratum}
+        AND primary_sample_unit = '#{sample["primary_sample_unit"]}'
+        AND station_nr = #{sample["station_nr"]}")
+
+        # Calculate richness for selected
+        richness = calculate_richness(selected)
+        # Intialize and save a diversity object for that ssu
+        d = Diversity.new(primary_sample_unit: sample["primary_sample_unit"],
+        station_nr: sample["station_nr"], richness: richness,
+        strat_id: stratum)
+        if d.valid?
+          d.save
+        else
+          errors = d.errors.full_messages
+          raise("diversity record could not be saved for the following reason(s):"\
+          "#{errors}")
+        end
+        # Remove selected from samples
+        samples = samples - selected.map{|k| k["id"]}
       end
-      # Relate samples in SSU to diversity record
-      d.samples = selected
-      # remove SSU samples from samples object
-      samples = samples.where.not(id: selected.map{|j| j.id})
-       # Make a counter that counts off every 5% records
-       n = n + 1
-       if n % (l/20) == 0
-         puts "#{(n.to_f/l * 100).ceil} percent complete"
-         puts "ET: #{(Time.now - t).round(3)} seconds"
-      end
+      # Track loop progress
+      n = n + 1
+      puts "#{n} out of #{l} strata migrated"
+      puts "ET: #{(Time.now - t).round} seconds"
     end
     puts "finished calculating species richness"
   end
@@ -65,9 +69,9 @@ end
 # Calculates number of unique species in s
 def calculate_richness(s)
   # Select samples where individuals are present (num > 0)
-  present = s.where('num > ?', 0)
+  present = s.select{|i| i["num"].to_i > 0}
   # Unique species in present
-  species = present.map{|i| i.animal_id}.uniq
+  species = present.map{|j| j["animal_id"]}.uniq
   # Return number of unique species
   return species.length
 end

@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
   namespace :api do
-    resources :samples, :strats, :parameters
+    resources :samples, :strats, :parameters, :diversities
     root 'home#index'
   end
 
