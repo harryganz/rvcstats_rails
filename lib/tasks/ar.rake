@@ -9,15 +9,7 @@ namespace :ar do
     Rake::Task['psu:migrate'].invoke
     Rake::Task['ssu:migrate'].invoke
     Rake::Task['sample:migrate'].invoke
-
-    # Calculate Diversity
-    csv = CSV.read(file, :headers => true)
-    domains = csv.map{|r| {year: r["YEAR"], region: r["REGION"]}}.uniq
-    domains.each do |d|
-      ENV["region"] = d[:region]
-      ENV["year"] = d[:year]
-      Rake::Task['diversity:generate']
-    end
+    Rake::Task['diversity:generate'].invoke
     puts "finished migrating file"
   end
 end
