@@ -38,7 +38,6 @@ stratum_files = Dir.glob("#{stratum_dir}/**/*.csv")
 stratum_files.each do |f|
   puts "migrating #{f}"
   ENV['file'] = f
-  Rake::Task['domain:migrate'].execute
   Rake::Task['ntot:migrate'].execute
 end
 puts "finished seeding stratum data"
