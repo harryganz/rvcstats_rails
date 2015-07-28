@@ -1,7 +1,7 @@
 require 'csv'
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
+
 # Examples:
 #
 #   cities = City.create([{ name: 'Chicago' }', { name: 'Copenhagen' }'])
@@ -10,7 +10,7 @@ puts "Seeding database with data"
 # Seed species data
 puts "seeding taxonomic data"
 Animal.delete_all
-Animal.connection.execute( 'ALTER SEQUENCE animals_id_seq RESTART WITH 1' ) # Restart id numbering
+Animal.connection.execute( 'ALTER SEQUENCE animals_id_seq RESTART WITH 1' )
 ENV['file'] = "#{Rails.root}/db/seed_data/RVC_Species_List.csv"
 # Invoke rake task in lib/tasks
 Rake::Task['species:migrate'].invoke
@@ -27,7 +27,7 @@ puts "finished seeding life history data"
 # Seed stratum data
 puts "seeding stratum/domain data"
 Strat.delete_all
-Strat.connection.execute( 'ALTER SEQUENCE strats_id_seq RESTART WITH 1' ) #Restart id numbering
+Strat.connection.execute( 'ALTER SEQUENCE strats_id_seq RESTART WITH 1' )
 Domain.delete_all
 Domain.connection.execute( 'ALTER SEQUENCE domains_id_seq RESTART WITH 1')
 # Path to the directory containing stratum files
@@ -38,7 +38,8 @@ stratum_files = Dir.glob("#{stratum_dir}/**/*.csv")
 stratum_files.each do |f|
   puts "migrating #{f}"
   ENV['file'] = f
-  Rake::Task['ntot:migrate'].execute
+  Rake::Task['ntot:migrate'].reenable
+  Rake::Task['ntot:migrate'].invoke
 end
 puts "finished seeding stratum data"
 
@@ -49,7 +50,7 @@ Ssu.delete_all
 Psu.delete_all
 Psu.connection.execute('ALTER SEQUENCE psus_id_seq RESTART WITH 1')
 Ssu.connection.execute('ALTER SEQUENCE ssus_id_seq RESTART WITH 1')
-Sample.connection.execute('ALTER SEQUENCE samples_id_seq RESTART WITH 1' ) #Restart id numbering
+Sample.connection.execute('ALTER SEQUENCE samples_id_seq RESTART WITH 1' )
 # Path to the directory containing sample data
 sample_dir = "#{Rails.root}/db/seed_data/sample_data"
 # Array of filenames of sample data
@@ -58,8 +59,17 @@ sample_files = Dir.glob("#{sample_dir}/**/*.csv")
 sample_files.each do |f|
   puts "migrating #{f}"
   ENV['file'] = f
-  Rake::Task['ar:migrate'].execute
+  Rake::Task['ar:migrate'].reenable
+  Rake::Task['ar:migrate'].invoke
 end
 puts "Finished seeding sample data"
-
+benthic_dir = "#{Rails.root}/db/seed_data/benthic_data"
+# Array of fileneames of benthic data
+benthic_files = Dir.glob("#{benthic_dir}/**/*.csv")
+benthic_files.each do |f|
+  puts "migrating #{f}"
+  ENV['file'] = f
+  Rake::Task['benthic:migrate'].reenable
+  Rake::Task['benthic:migrate'].invoke
+end
 puts "completed seeding database with data"

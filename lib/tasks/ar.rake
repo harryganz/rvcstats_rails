@@ -6,10 +6,10 @@ namespace :ar do
     file = ENV["file"].to_s
     puts "starting to migrate file: #{file}"
     # Migrate data
-    Rake::Task['psu:migrate'].invoke
-    Rake::Task['ssu:migrate'].invoke
-    Rake::Task['sample:migrate'].invoke
-    Rake::Task['diversity:generate'].invoke
+    Rake::Task['psu:migrate'].execute
+    Rake::Task['ssu:migrate'].execute
+    Rake::Task['sample:migrate'].execute
+    Rake::Task['diversity:generate'].execute
     puts "finished migrating file"
   end
 end
