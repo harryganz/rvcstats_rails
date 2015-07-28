@@ -17,7 +17,8 @@ namespace :ssu do
          habitat_cd: r["HABITAT_CD"]}
     end
     # Get unique set of SSUs
-    ssus = ss.uniq
+    ssus = ss.uniq{|v| [v[:year], v[:region], v[:primary_sample_unit],
+      v[:station_nr]]}
     # Set up a table to query for PSUs
     psu_table = Psu.includes(strat: :domain)
     # Variables to track loop progress
