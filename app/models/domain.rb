@@ -1,6 +1,6 @@
 class Domain < ActiveRecord::Base
   # Relationships
-  has_many :strats
+  has_many :strats, dependent: :destroy
 
   # Validations
   validates :year,

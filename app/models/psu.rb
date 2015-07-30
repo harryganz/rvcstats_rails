@@ -1,7 +1,7 @@
 class Psu < ActiveRecord::Base
   # Relationships
   belongs_to :strat
-  has_many :ssus
+  has_many :ssus, dependent: :destroy
 
   # Validations
   validates :month,

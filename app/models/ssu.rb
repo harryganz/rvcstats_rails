@@ -1,7 +1,7 @@
 class Ssu < ActiveRecord::Base
   # Relationships
   belongs_to :psu
-  has_many :samples
+  has_many :samples, dependent: :destroy
 
   # Validations
   validates :station_nr,
@@ -168,7 +168,7 @@ class Ssu < ActiveRecord::Base
   def prot
     psu.strat.prot
   end
-  
+
   def primary_sample_unit
     psu.primary_sample_unit
   end

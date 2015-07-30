@@ -1,7 +1,7 @@
 class Strat < ActiveRecord::Base
 	#Relationships
 	belongs_to :domain
-	has_many :psus
+	has_many :psus, dependent: :destroy
 
 	#Validations
 	validates :strat,
