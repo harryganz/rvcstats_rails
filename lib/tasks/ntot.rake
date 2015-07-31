@@ -1,31 +1,22 @@
+require 'csv'
 namespace :ntot do
-  desc "migrates new strata to database"
+  desc "migrates strata and domains to database"
   task migrate: :environment do
-    puts 'starting to migrate strata'
     file = ENV['file'].to_s
-    CSV.foreach(file, :headers => true) do |row|
-      s = Strat.find_or_initialize_by(
-        year: row['YEAR'].to_i,
-        region: row['REGION'],
-        strat: row['STRAT'],
-        prot: row['PROT'].to_i,
-        rugosity_cd: row['RUGOSITY_CD'].present? ? row['RUGOSITY_CD'].to_i : 0,
-        rfhab: row['RFHAB'].present? ? row['RFHAB'] : row['STRAT'] 
-      )
-      s.assign_attributes(
-        ntot: row['NTOT'].to_i,
-        grid_size: row['GRID_SIZE'].to_i
-      )
-      if(s.valid?)
-        s.save
-      else
-        errors = s.errors.full_messages
-        raise "Stratum Strat:#{s.strat}, Year:#{s.year}, "\
-        "Region:#{s.region}, Prot:#{s.prot} not valid,"\
-        " for the following reasons #{errors.each {|m| puts m}}"
+    begin
+      Rake::Task['domain:migrate'].execute
+      Rake::Task['strat:migrate'].execute
+    rescue Exception => e
+      csv = CSV.read(file, headers: true)
+      d = []
+      csv.each{|r| d << {year: r["YEAR"], region: r["REGION"]}}
+      domains = d.uniq
+      puts "there was an error migrating the data"
+      puts "cleaning up, this may take several minutes ..."
+      domains.map do |i|
+        Domain.where(year: i[:year], region: i[:region]).destroy_all
       end
+      raise e
     end
-    puts 'finished migrating strata'
   end
-
 end

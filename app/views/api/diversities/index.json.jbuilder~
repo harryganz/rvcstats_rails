@@ -1,4 +1,4 @@
-json.array! @ssu do |s|
+!json.array @ssu do |s|
   json.YEAR s.year
   json.REGION s.region
   json.STRAT s.strat

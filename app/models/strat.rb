@@ -1,34 +1,16 @@
 class Strat < ActiveRecord::Base
 	#Relationships
-	has_many :samples
-	has_many :diversities
+	belongs_to :domain
+	has_many :psus, dependent: :destroy
 
 	#Validations
-	CD_REGEX = /\A[A-Z]{3}\s{1}(?:[A-Z]{4}|[A-Z]{3}[.]{1})\Z/
-	NAME_REGEX = /\A[A-Za-z\s]+\Z/
-
-	validates :year,
-	:presence => true,
-	:numericality => {
-		:greater_than => 1993,
-		:less_than_or_equal_to => Time.now.year,
-		:message => 'must be between 1994 and the current year'
-	}
-
-
 	validates :strat,
 	  :presence => true,
 	  :uniqueness => {
-	  	:scope => [:year, :region, :prot],
+	  	:scope => [:domain_id, :prot],
 	  	:message => 'must be unique for each combination of
 	  	year, region, and protected status'
 	  }
-
-	validates :region,
-	  :presence => true,
-	  :inclusion => {
-			:in => ['FLA KEYS', 'DRTO', 'SEFCRI']
-		}
 
 	validates :prot,
 		:numericality => true,
@@ -62,4 +44,34 @@ class Strat < ActiveRecord::Base
 		:less_than => 3
 	}
 
+	validates :richness,
+    :allow_blank => true,
+    :numericality => {
+      :only_integer => true
+    }
+
+	validates :domain_id,
+		:presence => true,
+		:numericality => {
+			:only_integer => true
+		}
+
+		# Methods and Scopes
+		scope :with_year, -> year {includes(:domain).where(domains: {
+			:year => year})}
+		scope :with_region, -> region {includes(:domain).where(
+			domains: {:region => region}
+			)}
+
+		def year
+			return domain.year
+		end
+
+		def region
+			return domain.region
+		end
+
+		def samples
+			Sample.joins(ssu: {psu: :strat}).where(strats: {id: id})
+		end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150617140449) do
+ActiveRecord::Schema.define(version: 20150625163240) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,18 +26,17 @@ ActiveRecord::Schema.define(version: 20150617140449) do
 
   add_index "animals", ["species_cd"], name: "index_animals_on_species_cd", unique: true, using: :btree
 
-  create_table "diversities", force: true do |t|
-    t.string   "primary_sample_unit"
-    t.string   "station_nr"
-    t.float    "richness"
-    t.integer  "strat_id"
+  create_table "domain_diversities", force: true do |t|
+    t.string   "region"
+    t.integer  "year"
+    t.integer  "richness"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "domain_diversities", force: true do |t|
-    t.string   "region"
+  create_table "domains", force: true do |t|
     t.integer  "year"
+    t.string   "region"
     t.integer  "richness"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -63,7 +62,7 @@ ActiveRecord::Schema.define(version: 20150617140449) do
     t.datetime "updated_at"
   end
 
-  create_table "samples", force: true do |t|
+  create_table "psus", force: true do |t|
     t.integer  "month"
     t.integer  "day"
     t.string   "primary_sample_unit"
@@ -71,24 +70,26 @@ ActiveRecord::Schema.define(version: 20150617140449) do
     t.integer  "subregion_nr"
     t.integer  "mapgrid_nr"
     t.integer  "mpa_nr"
-    t.integer  "time_seen"
-    t.integer  "station_nr"
-    t.float    "lat_degrees"
-    t.float    "lon_degrees"
-    t.float    "depth"
-    t.float    "underwater_visibility"
-    t.string   "habitat_cd"
-    t.float    "num"
-    t.float    "len"
-    t.integer  "animal_id"
+    t.integer  "richness"
     t.integer  "strat_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "diversity_id"
+  end
+
+  add_index "psus", ["strat_id"], name: "index_psus_on_strat_id", using: :btree
+
+  create_table "samples", force: true do |t|
+    t.integer  "time_seen"
+    t.float    "num"
+    t.float    "len"
+    t.integer  "animal_id"
+    t.integer  "ssu_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "samples", ["animal_id"], name: "index_samples_on_animal_id", using: :btree
-  add_index "samples", ["strat_id"], name: "index_samples_on_strat_id", using: :btree
+  add_index "samples", ["ssu_id"], name: "index_samples_on_ssu_id", using: :btree
 
   create_table "ssu_diversities", force: true do |t|
     t.integer  "psu_diversity_id"
@@ -97,6 +98,35 @@ ActiveRecord::Schema.define(version: 20150617140449) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "ssus", force: true do |t|
+    t.integer  "station_nr"
+    t.float    "lat_degrees"
+    t.float    "lon_degrees"
+    t.float    "depth"
+    t.float    "underwater_visibility"
+    t.string   "habitat_cd"
+    t.integer  "richness"
+    t.integer  "psu_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.float    "max_hard_relief"
+    t.float    "max_soft_relief"
+    t.float    "avg_hard_relief"
+    t.float    "hard_rel_pct_0"
+    t.float    "hard_rel_pct_1"
+    t.float    "hard_rel_pct_2"
+    t.float    "hard_rel_pct_3"
+    t.float    "hard_rel_pct_4"
+    t.float    "pct_sand"
+    t.float    "pct_hard_bottom"
+    t.float    "pct_rubble"
+    t.float    "pct_coral"
+    t.float    "pct_octo"
+    t.float    "pct_sponge"
+  end
+
+  add_index "ssus", ["psu_id"], name: "index_ssus_on_psu_id", using: :btree
 
   create_table "strat_diversities", force: true do |t|
     t.integer  "strat_id"
@@ -107,18 +137,18 @@ ActiveRecord::Schema.define(version: 20150617140449) do
   end
 
   create_table "strats", force: true do |t|
-    t.integer  "year"
-    t.string   "region"
     t.string   "strat"
     t.integer  "prot"
     t.integer  "ntot"
     t.integer  "grid_size"
+    t.integer  "richness"
+    t.integer  "domain_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "rfhab"
     t.integer  "rugosity_cd"
   end
 
-  add_index "strats", ["year", "region", "strat", "prot"], name: "index_strats_on_year_and_region_and_strat_and_prot", unique: true, using: :btree
+  add_index "strats", ["domain_id"], name: "index_strats_on_domain_id", using: :btree
 
 end
