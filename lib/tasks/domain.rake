@@ -1,4 +1,5 @@
 require 'csv'
+require_relative './helpers.rb'
 namespace :domain do
   desc 'migrates domain information onto domains table'
   task migrate: :environment do
@@ -15,8 +16,10 @@ namespace :domain do
     # Try to save each domain, raise error if it
     # cannot
     n = 0
+    l = domains.length
+    t = Time.now
     domains.each do |d|
-      x = Domain.new(d)
+      x = Domain.find_or_initialize_by(d)
       if !x.save
         errors = x.errors.full_messages
         raise "domain with year: #{d[:year]} and region: #{d[:region]}"\
@@ -25,7 +28,7 @@ namespace :domain do
       end
       # Track loop progress
       n += 1
-      puts "#{n} domains migrated"
+      track_progress(n,l,t)
     end
     puts "finished migrating domains"
   end

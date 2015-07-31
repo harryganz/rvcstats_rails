@@ -1,5 +1,5 @@
 require 'csv'
-
+require_relative './helpers.rb'
 namespace :psu do
   desc 'migrates new psus to database from AR file'
   task migrate: :environment do
@@ -19,6 +19,7 @@ namespace :psu do
     # Variables to track loop progress
     n = 0
     l = psus.length
+    t = Time.now
     ## Set up table to query from
     strat_table = Strat.includes(:domain)
     psus.each do |i|
@@ -39,9 +40,7 @@ namespace :psu do
        end
       # Track loop progress
       n += 1
-      if n % (l.to_f/20).round == 0
-        puts "#{(n.to_f/l * 100).round} percent complete"
-      end
+      track_progress(n,l,t)
     end
     puts "done migrating PSUs"
   end

@@ -1,3 +1,4 @@
+require_relative './helpers.rb'
 namespace :strat do
   desc "migrates new strata to database"
   task migrate: :environment do
@@ -6,6 +7,7 @@ namespace :strat do
     # Store variables for tracking loop progress
     n = 0
     l = CSV.read(file).length
+    t = Time.now
     CSV.foreach(file, :headers => true) do |row|
       d = Domain.where(year: row['YEAR'], region: row['REGION']).first
       s = Strat.find_or_initialize_by(
@@ -29,9 +31,7 @@ namespace :strat do
       end
       # Track loop progress
       n += 1
-      if n % (l.to_f/20).round == 0
-        puts "#{(n.to_f/l * 100).round} percent complete"
-      end
+      track_progress(n,l,t)
     end
     puts 'finished migrating strata'
   end

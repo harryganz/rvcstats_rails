@@ -1,4 +1,5 @@
 require 'csv'
+require_relative './helpers.rb'
 namespace :sample do
   desc "migrates samples from csv file"
   task migrate: :environment do
@@ -49,11 +50,8 @@ namespace :sample do
       " ssu_id, created_at, updated_at) VALUES (#{r["NUM"]}, #{r["LEN"]}, "\
       " #{r["TIME_SEEN"]}, #{animal_id}, #{ssu_id}, '#{Time.now}',"\
       " '#{Time.now}')")
-        n += 1
-        if n % (l.to_f/20).round == 0
-          puts "#{(n.to_f/l * 100).round} percent complete"
-          puts "ET: #{(Time.now - t).round} seconds elapsed"
-        end
+      n += 1
+      track_progress(n,l,t)
     end
     puts 'finished migrating samples'
   end

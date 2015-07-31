@@ -1,4 +1,5 @@
 require 'csv'
+require_relative './helpers.rb'
 namespace :ssu do
   desc 'migrates ssus from AR data'
   task migrate: :environment do
@@ -48,10 +49,7 @@ namespace :ssu do
         end
        # Track loop progress
        n += 1
-       if n % (l.to_f/20).round == 0
-         puts "#{(n.to_f/l * 100).round} percent complete"
-         puts "ET: #{(Time.now-t).round} seconds elapsed"
-       end
+       track_progress(n,l,t)
     end
     puts "finished migrating SSUs"
   end
