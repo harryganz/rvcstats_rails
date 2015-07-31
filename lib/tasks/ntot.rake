@@ -6,13 +6,17 @@ namespace :ntot do
     begin
       Rake::Task['domain:migrate'].execute
       Rake::Task['strat:migrate'].execute
-    rescue Exception: e
+    rescue Exception => e
       csv = CSV.read(file, headers: true)
       d = []
       csv.each{|r| d << {year: r["YEAR"], region: r["REGION"]}}
       domains = d.uniq
-      Domain.where(domains).destroy_all
-      puts e
+      puts "there was an error migrating the data"
+      puts "cleaning up, this may take several minutes ..."
+      domains.map do |i|
+        Domain.where(year: i[:year], region: i[:region]).destroy_all
+      end
+      raise e
     end
   end
 end

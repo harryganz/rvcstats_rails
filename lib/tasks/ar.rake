@@ -12,13 +12,18 @@ namespace :ar do
       Rake::Task['sample:migrate'].execute
       Rake::Task['diversity:generate'].execute
       puts "finished migrating file"
-    rescue Exception: e
+    rescue Exception => e
       csv = CSV.read(file, headers: true)
       d = []
       csv.each{|r| d << {year: r["YEAR"], region: r["REGION"]}}
       domains = d.uniq
-      Psu.joins(strat: :domain).where(domains: domains).destroy_all
-      puts e
+      psu_table = Psu.includes(strat: :domain)
+      puts "there was an error migrating the data"
+      puts "cleaning up, this may take several minutes ..."
+      domains.map do |i|
+        psu_table.where(domains: {year: i[:year], region: i[:region]}).destroy_all
+      end
+      raise e
     end
   end
 end
