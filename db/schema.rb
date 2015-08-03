@@ -26,6 +26,15 @@ ActiveRecord::Schema.define(version: 20150625163240) do
 
   add_index "animals", ["species_cd"], name: "index_animals_on_species_cd", unique: true, using: :btree
 
+  create_table "diversities", force: true do |t|
+    t.string   "primary_sample_unit"
+    t.string   "station_nr"
+    t.float    "richness"
+    t.integer  "strat_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "domain_diversities", force: true do |t|
     t.string   "region"
     t.integer  "year"
