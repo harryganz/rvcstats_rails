@@ -1,2 +1,43 @@
-<h1>Api::Home#index</h1>
-<p>Find me in app/views/api/home/index.html.erb</p>
+<% @title = "RVC Analysis | API" %>
+<div class="row">
+  <h3> Using the API </h3>
+  <p>The API is separated into five sections:</p>
+  <ol>
+    <li>strats</li>
+    <p> NTOT and other data for strata for input year and regions.</p>
+    <li>samples</li>
+    <p> Sample data (counts, lengths) pertaining to the samples for a year,
+       region, and species.</p>
+    <li>diversities</li>
+    <p> Species richness data for a year and region.</p>
+    <li>benthic</li>
+    <p> Benthic data for a year and region.</p>
+    <li>parameters</li>
+    <p> Life history parameters for a species.</p>
+  </ol>
+  <h3> Strats</h3>
+  <p>API Call:</p>
+  <ul>
+    <li>http://www.sefsc.noaa.gov/rvc_analysis/api/strats.json?
+      year[]=2011&amp;region[]=FLA+KEYS&amp;strat[]=FMLR</li>
+      <li>http://www.sefsc.noaa.gov/rvc_analysis/api/strats.json?
+        year[]=2011&amp;region[]=DRTO&amp;region[]=FLA+KEYS&amp;prot[]=1</li>
+  </ul>
+  <p>Available parameters:</p>
+  <ul>
+    <li>
+      strat: The four letter code for a stratum (e.g. FSLR, FMLR, FDLR, INPR,
+      OFPR, MCPR, HRRF)
+    </li>
+    <li>
+      year: the year (e.g. 1998)
+    </li>
+    <li>
+      region: the region code (e.g. FLA KEYS, DRTO, SEFCRI)
+    </li>
+    <li>
+      prot: the protected status (e.g. 0, 1, 2)
+    </li>
+  </ul>
+
+</div>
