@@ -21,15 +21,15 @@
    margin: 0 auto;
  }
  // Get rid of link styles for header
- div.page-header a{
+ div.page-header h1 a{
   color:inherit;
   text-decoration: none;
  }
- div.page-header a:hover {
+ div.page-header h1 a:hover {
    color:inherit;
    text-decoration: none;
  }
- div.page-header a:active {
+ div.page-header h1 a:active {
    color:inherit;
    text-decoration: none;
  }
