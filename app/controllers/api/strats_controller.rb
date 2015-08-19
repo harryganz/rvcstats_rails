@@ -1,8 +1,10 @@
 class Api::StratsController < ApplicationController
   def index
-  	@strata = Strat.where(query_params[:strat],
-      query_params[:prot]).with_year(
-      query_params[:year]).with_region(query_params[:region])
+  	@strata = Strat.
+    with_strat(query_params[:strat]).
+    with_prot(query_params[:prot]).
+    with_year(query_params[:year]).
+    with_region(query_params[:region])
   end
 
   private

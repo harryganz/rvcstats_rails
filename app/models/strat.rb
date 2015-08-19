@@ -62,6 +62,8 @@ class Strat < ActiveRecord::Base
 		scope :with_region, -> region {includes(:domain).where(
 			domains: {:region => region}
 			) if region.present?}
+		scope :with_strat, -> strat {where(strat: strat) if strat.present?}
+		scope :with_prot, -> prot {where(prot: prot) if prot.present?}
 
 		def year
 			return domain.year
