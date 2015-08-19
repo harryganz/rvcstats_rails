@@ -1,12 +1,10 @@
 Rails.application.routes.draw do
 
   namespace :api do
-    resources :samples, :strats, :parameters
+    resources :samples, :strats, :parameters, :diversities, :benthic
   end
 
-  get 'api/benthic' => 'api/benthic#index'
-
-  get 'api/diversities' => 'api/diversities#index'
+  get 'api' => 'api/home#index'
 
   root 'home#index'
 
