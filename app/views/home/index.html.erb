@@ -1,2 +1,39 @@
-<h1>Home#index</h1>
-<p>Find me in app/views/home/index.html.erb</p>
+<% @title = "RVC Analysis | Home" %>
+<div class="row">
+<h3> Available Data </h3>
+<p> The Reef Visual Census is a SCUBA survey of fish species in South
+  Florida. Currently, the data available is divided into three different
+  regions by year: </p>
+<ol>
+  <li> Florida Keys (FLA KEYS)
+    <p> Southern Key Biscayne to Key West.
+      Available for every year between 1994 and 2012. </p>
+  </li>
+  <li> Dry Tortugas (DRTO)
+    <p>
+      Dry Tortugas National Park and surrounding reefs.
+       Available from 1999 and every even numbered year
+      from 2000 through 2012. </p>
+    </p>
+  </li>
+  <li> Southeast Florida (SEFCRI)
+    <p>
+      Nothern Key Biscayne through Martin County.
+      Available for 2012 and 2013 (combined into year labelled 2013).
+      and 2014
+    </p>
+  </li>
+</ol>
+<h3>Getting the Data</h3>
+<p> For most end-users the best way to access the data is through the
+  accompanying R package available on the GitHub page:
+  <a href="http://github.com/jeremiaheb/rvcstats">
+    http://github.com/jeremiaheb/rvcstats</a>. Documentation on how to get
+  started with the R package are available on the GitHub page and via
+  the package's help pages. </p>
+<h3>Using the API</h3>
+<p> For users wishing to write their own interfaces for the data, information
+  on using the API is available at <a href="/api">
+    http://sefsc.noaa.gov/rvc_analysis/api</a>.
+  </p>
+</div>
