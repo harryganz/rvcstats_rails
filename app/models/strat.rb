@@ -58,10 +58,10 @@ class Strat < ActiveRecord::Base
 
 		# Methods and Scopes
 		scope :with_year, -> year {includes(:domain).where(domains: {
-			:year => year})}
+			:year => year}) if year.present?}
 		scope :with_region, -> region {includes(:domain).where(
 			domains: {:region => region}
-			)}
+			) if region.present?}
 
 		def year
 			return domain.year
