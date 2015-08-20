@@ -1,43 +1,119 @@
 <% @title = "RVC Analysis | API" %>
 <div class="row">
-  <h3> Using the API </h3>
-  <p>The API is separated into five sections:</p>
-  <ol>
-    <li>strats</li>
-    <p> NTOT and other data for strata for input year and regions.</p>
-    <li>samples</li>
-    <p> Sample data (counts, lengths) pertaining to the samples for a year,
-       region, and species.</p>
-    <li>diversities</li>
-    <p> Species richness data for a year and region.</p>
-    <li>benthic</li>
-    <p> Benthic data for a year and region.</p>
-    <li>parameters</li>
-    <p> Life history parameters for a species.</p>
-  </ol>
-  <h3> Strats</h3>
-  <p>API Call:</p>
-  <ul>
-    <li>http://www.sefsc.noaa.gov/rvc_analysis/api/strats.json?
-      year[]=2011&amp;region[]=FLA+KEYS&amp;strat[]=FMLR</li>
-      <li>http://www.sefsc.noaa.gov/rvc_analysis/api/strats.json?
-        year[]=2011&amp;region[]=DRTO&amp;region[]=FLA+KEYS&amp;prot[]=1</li>
-  </ul>
+  <h3>Sample Data</h3>
+  <p> Returns fish sample data including the lengths (cm), species codes,
+     and number of fish observed at each station as well as geographic
+     information (latitude, longitude) and other sampling information (stratum,
+     protected status, primary sample unit, station number).</p>
+  <p>Request format:</p>
+  <pre>http://www.sefsc.noaa.gov/rvc_analysis/api/samples.json?year[]=2000&amp;region[]=FLA+KEYS&amp;prot[]=1&amp;strat[]=FMLR&amp;species[]=EPI+MORI&amp;species[]=LUT+GRIS</pre>
+  <p>Response:</p>
+  <pre>[{"YEAR":2000,"REGION":"FLA KEYS","STRAT":"FMLR","PROT":1,"MPA_NR":13,"PRIMARY_SAMPLE_UNIT":"052U","STATION_NR":2,"LAT_DEGREES":24.7642667,"LON_DEGREES":-80.7561666,"SPECIES_CD":"EPI MORI","TIME_SEEN":1,"UNDERWATER_VISIBILITY":8.0,"DEPTH":5.5,"LEN":35.0,"NUM":0.5},{"YEAR":2000,"REGION":"FLA KEYS","STRAT":"FMLR","PROT":1,"MPA_NR":13,"PRIMARY_SAMPLE_UNIT":"052U","STATION_NR":2,"LAT_DEGREES":24.7642667,"LON_DEGREES":-80.7561666,"SPECIES_CD":"EPI MORI","TIME_SEEN":1,"UNDERWATER_VISIBILITY":8.0,"DEPTH":5.5,"LEN":0.0,"NUM":0.0}, ...]</pre>
   <p>Available parameters:</p>
   <ul>
-    <li>
-      strat: The four letter code for a stratum (e.g. FSLR, FMLR, FDLR, INPR,
-      OFPR, MCPR, HRRF)
+    <li>year:
+      <p>Year between 1994 and the last available year.</p>
     </li>
-    <li>
-      year: the year (e.g. 1998)
+    <li>region:
+      <p>A code for each region: DRTO (Dry Tortugas), FLA KEYS (Florida Keys),
+        SEFCRI (Southeast Florida).</p>
     </li>
-    <li>
-      region: the region code (e.g. FLA KEYS, DRTO, SEFCRI)
+    <li>strat:
+      <p>A four letter code for each stratum (e.g. INPR, FMLR).
+         Differs by region.</p>
     </li>
-    <li>
-      prot: the protected status (e.g. 0, 1, 2)
+    <li>prot:
+      <p>
+        Protected status. 0 for unprotected, 1 or 2 for different protection
+        statuses.
+      </p>
+    </li>
+    <li>species:
+      <p>Species code. The first three letters of the generic name and first
+        three letters of the species name.</p>
     </li>
   </ul>
-
+  <h3>Stratum Data</h3>
+  <p>Returns information on strata, including the stratum code, protected status,
+    NTOT (number of possible primary samples), and grid size (side length of a grid)</p>
+  <p>Request format:</p>
+  <pre>http://www.sefsc.noaa.gov/rvc_analysis/api/strats.json?year[]=2000&amp;region[]=DRTO&amp;strat[]=SPGR_HR&amp;strat[]=ISOL_HR&amp;prot[]=2</pre>
+  <p>Response:</p>
+  <pre>[{"YEAR":2000,"REGION":"DRTO","RFHAB":"ISOL_HR","RUGOSITY_CD":0,"STRAT":"ISOL_HR","PROT":2,"NTOT":122,"GRID_SIZE":200},{"YEAR":2000,"REGION":"DRTO","RFHAB":"SPGR_HR","RUGOSITY_CD":0,"STRAT":"SPGR_HR","PROT":2,"NTOT":126,"GRID_SIZE":200}]</pre>
+  <p>Available parameters:</p>
+  <ul>
+    <li>year:
+      <p>Year between 1994 and the last available year.</p>
+    </li>
+    <li>region:
+      <p>A code for each region: DRTO (Dry Tortugas), FLA KEYS (Florida Keys),
+        SEFCRI (Southeast Florida).</p>
+    </li>
+    <li>strat:
+      <p>A four letter code for each stratum (e.g. INPR, FMLR).
+         Differs by region.</p>
+    </li>
+    <li>prot:
+      <p>
+        Protected status. 0 for unprotected, 1 or 2 for different protection
+        statuses.
+      </p>
+    </li>
+  </ul>
+  <h3>Life History Parameter Data</h3>
+  <p>Returns life history parameters, including: length at maturity, length at
+    capture and allometric growth parameters for different species. </p>
+   <p>Request format:</p>
+   <pre>http://www.sefsc.noaa.gov/rvc_analysis/api/parameters.json?species[]=EPI+MORI&amp;species[]=LUT+GRIS</pre>
+   <p>Response:</p>
+   <pre>[{"SPECIES_CD":"EPI MORI","LC":50.0,"LM":43.3798,"WLEN_A":1.13e-05,"WLEN_B":3.035},{"SPECIES_CD":"LUT GRIS","LC":25.0,"LM":23.0172,"WLEN_A":1.74e-05,"WLEN_B":2.97}]</pre>
+   <p>Available parameters:</p>
+   <ul>
+     <li>species:
+       <p>Species code. The first three letters of the generic name and first
+         three letters of the species name.</p>
+     </li>
+   </ul>
+   <h3>Benthic Data</h3>
+   <p>Returns benthic data collected during fish surveys, including:
+     maximum hard relief, maximum soft relief, percent coral cover, etc.</p>
+   <p>Request format:</p>
+   <pre>http://www.sefsc.noaa.gov/rvc_analysis/api/benthic.json?year[]=2011&amp;region[]=FLA+KEYS</pre>
+   <p>Response:</p>
+   <pre>[{"YEAR":2011,"REGION":"FLA KEYS","STRAT":"FMLR","PROT":0,"PRIMARY_SAMPLE_UNIT":"431U","STATION_NR":1,"MAX_HARD_RELIEF":1.4,"MAX_SOFT_RELIEF":0.9,"AVG_HARD_RELIEF":0.669,"HARD_REL_PCT_0":22.0,"HARD_REL_PCT_1":17.0,"HARD_REL_PCT_2":35.0,"HARD_REL_PCT_3":26.0,"HARD_REL_PCT_4":0.0,"PCT_SAND":10.0,"PCT_HARD_BOTTOM":90.0,"PCT_CORAL":10.0,"PCT_OCTO":15.0,"PCT_SPONGE":15.0,"PCT_RUBBLE":0.0}, ...]</pre>
+   <p>Available prameters:</p>
+   <ul>
+     <li>year:
+       <p>Year between 1994 and the last available year.</p>
+     </li>
+     <li>region:
+       <p>A code for each region: DRTO (Dry Tortugas), FLA KEYS (Florida Keys),
+         SEFCRI (Southeast Florida).</p>
+     </li>
+     <li>strat:
+       <p>A four letter code for each stratum (e.g. INPR, FMLR).
+          Differs by region.</p>
+     </li>
+   </ul>
+   <h3>Diversity Data</h3>
+   <p>Returns species richness at different sampling stages: domain, stratum,
+     primary sample unit, and secondary sampling unit.</p>
+   <p>Request format:</p>
+   <pre>http://www.sefsc.noaa.gov/rvc_analysis/api/diversities.json?year[]=2011&amp;region[]=FLA+KEYS&amp;strat[]=FMLR</pre>
+   <p>Response:</p>
+   <pre>[{"YEAR":2011,"REGION":"FLA KEYS","STRAT":"FMLR","NTOT":4979,"PROT":0,"PRIMARY_SAMPLE_UNIT":"431U","GRID_SIZE":200,"STATION_NR":1,"DOMAIN_RICHNESS":256,"STRAT_RICHNESS":199,"PSU_RICHNESS":38,"SSU_RICHNESS":31}, ...]</pre>
+   <p>Available parameters:</p>
+   <ul>
+     <li>year:
+       <p>Year between 1994 and the last available year.</p>
+     </li>
+     <li>region:
+       <p>A code for each region: DRTO (Dry Tortugas), FLA KEYS (Florida Keys),
+         SEFCRI (Southeast Florida).</p>
+     </li>
+     <li>strat:
+       <p>A four letter code for each stratum (e.g. INPR, FMLR).
+          Differs by region.</p>
+     </li>
+   </ul>
 </div>
