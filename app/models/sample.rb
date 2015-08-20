@@ -45,7 +45,7 @@ class Sample < ActiveRecord::Base
 	 scope :with_stratum, -> stratum {includes(ssu: {psu: :strat}).where(
 		:strats => {strat: stratum}) if stratum.present?}
 	 scope :is_protected, -> prot {includes(ssu: {psu: :strat}).where(
-		:strats => {prot: prot.to_i}) if prot.present?}
+		:strats => {prot: prot}) if prot.present?}
 	 scope :when_present, -> p {
 		where('num > ?', p.to_i == 1 ? 0 : -1) if p.present?}
 
