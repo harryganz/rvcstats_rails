@@ -12,7 +12,7 @@ namespace :psu do
          prot: r["PROT"], month: r["MONTH"], day: r["DAY"],
          primary_sample_unit: r["PRIMARY_SAMPLE_UNIT"], zone_nr: r["ZONE_NR"],
          subregion_nr: r["SUBREGION_NR"], mapgrid_nr: r["MAPGRID_NR"],
-         mpa_nr: r["MPA_NR"]}
+         mpa_nr: r["MPA_NR"], m: r["m"]}
     end
     # Store each unique psu
     psus = p.uniq{|v| [v[:primary_sample_unit], v[:year], v[:region]]}
@@ -31,7 +31,7 @@ namespace :psu do
       psu = Psu.new(month: i[:month], day: i[:day],
         primary_sample_unit: i[:primary_sample_unit], zone_nr: i[:zone_nr],
         subregion_nr: i[:subregion_nr], mapgrid_nr: i[:mapgrid_nr],
-        mpa_nr: i[:mpa_nr], strat_id: strat_id)
+        mpa_nr: i[:mpa_nr], strat_id: strat_id, m: i[:m])
       # Save if valid, else raise error
       if !psu.save
         errors = psu.errors.full_messages

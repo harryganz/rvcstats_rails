@@ -10,6 +10,7 @@ namespace :ar do
       Rake::Task['psu:migrate'].execute
       Rake::Task['ssu:migrate'].execute
       Rake::Task['sample:migrate'].execute
+      Rake::Task['nm:migrate'].execute
       Rake::Task['diversity:generate'].execute
       puts "finished migrating file"
     rescue Exception => e
