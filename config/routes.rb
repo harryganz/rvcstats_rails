@@ -4,6 +4,10 @@ Rails.application.routes.draw do
     resources :samples, :strats, :parameters, :diversities, :benthic
   end
 
+  namespace :apiv2 do
+    resources :animals
+  end
+
   get 'api' => 'api/home#index'
 
   root 'home#index'
