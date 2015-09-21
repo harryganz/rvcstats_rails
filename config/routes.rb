@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   end
 
   namespace :apiv2 do
-    resources :animals, :samples
+    resources :animals, :samples, :domains
   end
 
   get 'api' => 'api/home#index'
