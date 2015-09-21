@@ -10,6 +10,8 @@ Rails.application.routes.draw do
 
   get 'api' => 'api/home#index'
 
+  get 'apiv2' => 'apiv2/home#index'
+
   root 'home#index'
 
   # The priority is based upon order of creation: first created -> highest priority.
