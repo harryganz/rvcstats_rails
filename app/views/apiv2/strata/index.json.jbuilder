@@ -1,4 +1,4 @@
-json.strata @strata do |st|
+json.array! @strata do |st|
     json.id st.id
     json.strat st.strat
     json.prot st.prot

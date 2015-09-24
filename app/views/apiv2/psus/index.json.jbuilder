@@ -1,4 +1,4 @@
-json.psus @psus do |p|
+json.array! @psus do |p|
   json.id p.id
   json.month p.month
   json.day p.day

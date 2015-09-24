@@ -1,4 +1,4 @@
-json.ssus @ssus do |ss|
+json.array! @ssus do |ss|
   json.id ss.id
   json.station_nr ss.station_nr
   json.lat_degrees ss.lat_degrees
