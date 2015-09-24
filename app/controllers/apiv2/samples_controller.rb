@@ -1,10 +1,15 @@
 class Apiv2::SamplesController < ApplicationController
   def index
-    @samples = Sample.where(query_params)
+    @domains = Domain.includes(strats: {psus: {ssus: :samples}}).where(query_params)
+    @animal_id = animal_param
   end
 
   private
     def query_params
-      params.permit(:id => [], :animal_id => [], :ssu_id => [])
+      params.permit(:id => [], :year => [], :region => [])
+    end
+
+    def animal_param
+      params.permit(:animal_id => [])
     end
 end
