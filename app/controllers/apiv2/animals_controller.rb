@@ -1,6 +1,6 @@
 class Apiv2::AnimalsController < ApplicationController
   def index
-    @species = Animal.where(query_params)
+    @species = Animal.includes(:parameter).where(query_params)
   end
 
   private
