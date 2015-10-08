@@ -49,11 +49,13 @@ json.array! @domains do |d|
         json.pct_coral ss.pct_coral
         json.pct_octo ss.pct_octo
         json.pct_sponge ss.pct_sponge
-        json.samples ss.samples.where(@animal_id) do |sa|
+        json.samples ss.samples do |sa|
+          json.id sa.id
           json.animal_id sa.animal_id
           json.time_seen sa.time_seen
           json.num sa.num
           json.len sa.len
+          json.ssu_id sa.ssu_id
         end
       end
     end
