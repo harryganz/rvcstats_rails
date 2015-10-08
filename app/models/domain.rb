@@ -29,4 +29,7 @@ class Domain < ActiveRecord::Base
   def samples
     Sample.joins(ssu: {psu: {strat: :domain}}).where(domains: {id: id})
   end
+
+  scope :with_animal_id, -> id {includes(strats: {psus: {ssus: :samples}}).
+    where(samples: {animal_id: id}) if id.present? }
 end
